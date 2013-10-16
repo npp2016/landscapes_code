@@ -29,7 +29,7 @@ siterichness <- ggplot(richnesssite, aes(x=site, y=S)) + xlab("Site") +
   ylab ("Species richness") + geom_point() + geom_point(size=3) + theme_bw()
 siterichness
 
-## Richness by vegetation type?
+## Richness by vegetation type?     #FIXME: currently counts "None" as a separate species
 richnessveg <- aggregate(pointdata$Species.Code, by=list(pointdata$Vegetation.Type), 
                       FUN=function(u) length(unique(u)))
 names(richnessveg) <- c("veg_type", "S")
