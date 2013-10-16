@@ -6,7 +6,7 @@
 library(ggplot2)
 library(reshape)
 
-##### CHOOSE CORRECT WORKING DIRECTORY (uncomment the one you like)
+##### CHOOSE WORKING DIRECTORY (uncomment the one you like)
 #wd = "C://Users//Anusha//Documents//Dropbox//Hummingbirds//Pasantias_Patagonia_2013//Final_Databases_2013//Excel_CSV_versions"
 wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Excel_CSV_versions"
 setwd(wd)
