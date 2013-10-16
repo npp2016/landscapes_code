@@ -14,10 +14,18 @@ setwd(wd)
 ## Reading in point count and focal observation data
 pointdata <- read.csv("updated_FocalObservationPointCountData.csv", na.strings="NA", sep=",", header=T)
 
+## subset data that does not include surveys where no birds were seen
+obs = subset(pointdata, Species.Code!="None")
+
 ## Plot species vs. site
 sitespecies <- ggplot(pointdata, aes(x=Site, y=Species.Code)) + ylab("Species") + 
   geom_point(col="red") + theme_bw()
 sitespecies
+
+## Aggregate data; count the number of species seen at each session
+richness <- aggregate(obs$Species.Code, by=list(obs$Month, obs$Day, obs$Year, obs$Session, 
+                                                obs$Site, obs$Vegetation.Type), FUN=function(u) length(unique(u)))
+names(richness) <- c("month", "day", "year", "session", "site", "vegtype", "S")
 
 ## Make a table for species richness at each site     #FIXME: currently counts "None" as a separate species
 richnesssite <- aggregate(pointdata$Species.Code, by=list(pointdata$Site), 
