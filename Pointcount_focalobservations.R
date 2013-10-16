@@ -19,7 +19,7 @@ sitespecies <- ggplot(pointdata, aes(x=Site, y=Species.Code)) + ylab("Species") 
   geom_point(col="red") + theme_bw()
 sitespecies
 
-## Make a table for species richness at each site
+## Make a table for species richness at each site     #FIXME: currently counts "None" as a separate species
 richnesssite <- aggregate(pointdata$Species.Code, by=list(pointdata$Site), 
                       FUN=function(u) length(unique(u)))
 names(richnesssite) <- c("site", "S")
