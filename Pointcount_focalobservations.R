@@ -22,9 +22,10 @@ sitespecies
 ## Make a table for species richness at each site
 richnesssite <- aggregate(pointdata$Species.Code, by=list(pointdata$Site), 
                       FUN=function(u) length(unique(u)))
+names(richnesssite) <- c("site", "S")
 
-## Plot richness as a function of site
-siterichness <- ggplot(richness, aes(x=Group.1, y=u)) + xlab("Site") + 
+## Plot richness as a function of site   
+siterichness <- ggplot(richnesssite, aes(x=site, y=S)) + xlab("Site") + 
   ylab ("Species richness") + geom_point() + geom_point(size=3) + theme_bw()
 siterichness
 
