@@ -27,8 +27,8 @@ richness <- aggregate(obs$Species.Code, by=list(obs$Month, obs$Day, obs$Year, ob
                                                 obs$Site, obs$Vegetation.Type), FUN=function(u) length(unique(u)))
 names(richness) <- c("month", "day", "year", "session", "site", "vegtype", "S")
 
-## Make a table for species richness at each site     #FIXME: currently counts "None" as a separate species
-richnesssite <- aggregate(pointdata$Species.Code, by=list(pointdata$Site), 
+## Make a table for species richness at each site     
+richnesssite <- aggregate(obs$Species.Code, by=list(obs$Site), 
                       FUN=function(u) length(unique(u)))
 names(richnesssite) <- c("site", "S")
 
