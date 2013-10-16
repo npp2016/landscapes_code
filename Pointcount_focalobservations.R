@@ -1,3 +1,8 @@
+# This code is to run exploratory analyses on observational data 
+# from the Summer 2013 field study in Patagonia, AZ
+# developed by: Anusha Shankar, Sarah Supp, and Catherine Graham
+
+
 setwd("C://Users//Anusha//Documents//Dropbox//Hummingbirds//Pasantias_Patagonia_2013//Final_Databases_2013//Excel_CSV_versions")
 
 ## Reading in point count and focal observation data
