@@ -39,3 +39,8 @@ vegrichness <- ggplot(richnessveg, aes(x=veg_type, y=S)) + xlab("Site") +
   ylab ("Species richness") + geom_point() + geom_point(size=3) + theme_bw()
 vegrichness
 
+#----- TODO:
+#compare richness at different times of day (session)
+#plot richness as a function of time
+#compare abundances across sites and habitat types
+#should we include data from both point counts and focal obs together or separately?
