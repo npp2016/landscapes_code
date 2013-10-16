@@ -54,10 +54,10 @@ vegrichness
 
 ## Plot number of species seen at different times of day
 qplot(data=richness, x=session, y=S, geom="boxplot")
+qplot(data=richness, x=session, y=S, geom="boxplot", facets = ~site, color = session)
 
 
 #----- TODO:
-#compare richness at different times of day (session)
 #plot richness as a function of time
 #compare abundances across sites and habitat types
 #should we include data from both point counts and focal obs together or separately?
