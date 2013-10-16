@@ -14,23 +14,28 @@ setwd(wd)
 ## Reading in point count and focal observation data
 pointdata <- read.csv("updated_FocalObservationPointCountData.csv", na.strings="NA", sep=",", header=T)
 
+#----------Cleaning and Aggregating the data
 ## subset data that does not include surveys where no birds were seen
 obs = subset(pointdata, Species.Code!="None")
-
-## Plot species vs. site
-sitespecies <- ggplot(pointdata, aes(x=Site, y=Species.Code)) + ylab("Species") + 
-  geom_point(col="red") + theme_bw()
-sitespecies
 
 ## Aggregate data; count the number of species seen at each session
 richness <- aggregate(obs$Species.Code, by=list(obs$Month, obs$Day, obs$Year, obs$Session, 
                                                 obs$Site, obs$Vegetation.Type), FUN=function(u) length(unique(u)))
 names(richness) <- c("month", "day", "year", "session", "site", "vegtype", "S")
+#order the factors for session (will always want to plot in chronological order by day)
+richness$session <- factor(richness$session,levels = c('Morning', 'Midday','Afternoon'),ordered = TRUE)
 
 ## Make a table for species richness at each site     
 richnesssite <- aggregate(obs$Species.Code, by=list(obs$Site), 
                       FUN=function(u) length(unique(u)))
 names(richnesssite) <- c("site", "S")
+
+#---------- Plotting the data
+
+## Plot species vs. site
+sitespecies <- ggplot(pointdata, aes(x=Site, y=Species.Code)) + ylab("Species") + 
+  geom_point(col="red") + theme_bw()
+sitespecies
 
 ## Plot richness as a function of site   
 siterichness <- ggplot(richnesssite, aes(x=site, y=S)) + xlab("Site") + 
@@ -46,6 +51,10 @@ names(richnessveg) <- c("veg_type", "S")
 vegrichness <- ggplot(richnessveg, aes(x=veg_type, y=S)) + xlab("Site") + 
   ylab ("Species richness") + geom_point() + geom_point(size=3) + theme_bw()
 vegrichness
+
+## Plot number of species seen at different times of day
+qplot(data=richness, x=session, y=S, geom="boxplot")
+
 
 #----- TODO:
 #compare richness at different times of day (session)
