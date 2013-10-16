@@ -2,6 +2,10 @@
 # from the Summer 2013 field study in Patagonia, AZ
 # developed by: Anusha Shankar, Sarah Supp, and Catherine Graham
 
+## Load packages
+library(ggplot2)
+library(reshape)
+
 ##### CHOOSE CORRECT WORKING DIRECTORY (uncomment the one you like)
 #wd = "C://Users//Anusha//Documents//Dropbox//Hummingbirds//Pasantias_Patagonia_2013//Final_Databases_2013//Excel_CSV_versions"
 wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Excel_CSV_versions"
@@ -9,10 +13,6 @@ setwd(wd)
 
 ## Reading in point count and focal observation data
 pointdata <- read.csv("updated_FocalObservationPointCountData.csv", na.strings="NA", sep=",", header=T)
-
-## Load packages
-require(ggplot2)
-require(reshape)
 
 ## Plot species vs. site
 sitespecies <- ggplot(pointdata, aes(x=Site, y=Species.Code)) + ylab("Species") + 
