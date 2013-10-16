@@ -32,8 +32,10 @@ siterichness
 ## Richness by vegetation type?
 richnessveg <- aggregate(pointdata$Species.Code, by=list(pointdata$Vegetation.Type), 
                       FUN=function(u) length(unique(u)))
+names(richnessveg) <- c("veg_type", "S")
 
-## Plot richness as a function of vegetation type
-vegrichness <- ggplot(richness, aes(x=Group.1, y=x)) + xlab("Site") + 
+## Plot richness as a function of vegetation type    #FIXME: x axes are not readable
+vegrichness <- ggplot(richnessveg, aes(x=veg_type, y=S)) + xlab("Site") + 
   ylab ("Species richness") + geom_point() + geom_point(size=3) + theme_bw()
 vegrichness
+
