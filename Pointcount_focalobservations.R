@@ -61,3 +61,4 @@ qplot(data=richness, x=session, y=S, geom="boxplot", facets = ~site, color = ses
 #plot richness as a function of time
 #compare abundances across sites and habitat types
 #should we include data from both point counts and focal obs together or separately?
+#convert mo-day-yr to julian date to enable plotting of timeseries data?
