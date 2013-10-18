@@ -5,6 +5,8 @@
 ## Load packages
 library(ggplot2)
 library(reshape)
+library(vegan)
+
 
 ##### CHOOSE WORKING DIRECTORY (uncomment the one you like)
 #wd = "C://Users//Anusha//Documents//Dropbox//Hummingbirds//Pasantias_Patagonia_2013//Final_Databases_2013//Excel_CSV_versions"
@@ -30,6 +32,14 @@ richnesssite <- aggregate(obs$Species.Code, by=list(obs$Site),
                       FUN=function(u) length(unique(u)))
 names(richnesssite) <- c("site", "S")
 
+## Richness by vegetation type?    
+richnessveg <- aggregate(obs$Species.Code, by=list(obs$Vegetation.Type), 
+                         FUN=function(u) length(unique(u)))
+names(richnessveg) <- c("veg_type", "S")
+
+## Make a table for species counts by site
+spcount = t(table(obs$Species.Code, obs$Site))
+
 #---------- Plotting the data
 
 ## Plot species vs. site
@@ -39,13 +49,8 @@ sitespecies
 
 ## Plot richness as a function of site   
 siterichness <- ggplot(richnesssite, aes(x=site, y=S)) + xlab("Site") + 
-  ylab ("Species richness") + geom_point() + geom_point(size=3) + theme_bw()
+  ylab ("Species richness") + geom_boxplot() + theme_bw()
 siterichness
-
-## Richness by vegetation type?    
-richnessveg <- aggregate(obs$Species.Code, by=list(obs$Vegetation.Type), 
-                      FUN=function(u) length(unique(u)))
-names(richnessveg) <- c("veg_type", "S")
 
 ## Plot richness as a function of vegetation type    #FIXME: x axes are not readable
 vegrichness <- ggplot(richnessveg, aes(x=veg_type, y=S)) + xlab("Site") + 
@@ -54,8 +59,9 @@ vegrichness
 
 ## Plot number of species seen at different times of day
 qplot(data=richness, x=session, y=S, geom="boxplot")
-qplot(data=richness, x=session, y=S, geom="boxplot", facets = ~site, color = session)
+qplot(data=richness, x=session, y=S, geom="boxplot", ylab="Species", facets = ~site, color = session) + theme_bw()
 
+##diversity(x=)
 
 #----- TODO:
 #plot richness as a function of time
