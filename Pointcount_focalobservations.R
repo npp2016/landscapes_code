@@ -52,14 +52,26 @@ names(richnessveg) <- c("veg_type", "S")
 
 ## Make a table for species counts by site
 spcount = t(table(obs$Species.Code, obs$Site))
+spcount = melt(spcount)
+  names(spcount) = c("site", "spcode", "N")
 
+n = table(obs$julian, obs$Site)
+n = melt(n)
 
 #---------- PLOTTING THE DATA
 
 ## Plot species vs. site
 sitespecies <- ggplot(obs, aes(x=Site, y=Species.Code)) + ylab("Species") + 
-  geom_point(col="red") + theme_bw()
+  geom_point(col="indianred") + theme_bw()
 sitespecies
+
+p<-ggplot(data=richness,aes(x=julian,y=S,col=site,shape=session)) + geom_point() + theme_bw() + geom_smooth(method="lm") + facet_wrap(~vegtype,nrow=3)
+ggsave("incredible.svg",height=9,width=8)
+
+p<-ggplot(data = spcount, aes(x=spcode, y = N, fill = site)) + geom_bar(position = "dodge") 
+p + theme_bw() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(x="Species",y="Count",fill="Site")
+
++ ggplot(data=richness,aes(x=julian,y=S,col=site,shape=session))
 
 ## Plot richness as a function of site   
 siterichness <- ggplot(richnesssite, aes(x=site, y=S)) + xlab("Site") + 
