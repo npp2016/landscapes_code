@@ -57,6 +57,13 @@ spcount = melt(spcount)
 
 n = table(obs$julian, obs$Site)
 n = melt(n)
+names(n) <- c("julian", "site", "N")
+
+ntime = table(obs$julian, obs$Session, obs$Site)
+ntime = melt(ntime)
+names(ntime) <- c("julian", "session", "site", "N")
+ntime$session <- factor(ntime$session,levels = c('Morning', 'Midday','Afternoon'),ordered = TRUE)
+
 
 #---------- PLOTTING THE DATA
 
@@ -65,13 +72,33 @@ sitespecies <- ggplot(obs, aes(x=Site, y=Species.Code)) + ylab("Species") +
   geom_point(col="indianred") + theme_bw()
 sitespecies
 
+## Plot the number of individuals of each species seen in the two landscapes
+p <- ggplot(data = spcount, aes(x=spcode, y = N, fill = site)) + geom_bar(position = "dodge") 
+p + theme_bw() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(x="Species",y="Count",fill="Site")
+
+## Plot the number of individuals counted at each site over time
+N_timeseries <- ggplot(n, aes(x=julian, y=N, col=site)) + geom_point() + geom_line() +
+  theme_bw() + labs(x="Julian Day", y="Number of Hummingbirds", col = "Landscape") +
+  scale_x_continuous(breaks = round(seq(130, 200, by = 10),1)) +
+  scale_y_continuous(breaks = round(seq(0, 80, by = 10),1))
+N_timeseries
+
+## Plot the number of individuals counted at each site over time and at each times of day
+N_timeday <- ggplot(ntime, aes(x=julian, y=N, col=site)) + geom_point() + geom_line() +
+  theme_bw() + labs(x="Julian Day", y="Number of Hummingbirds", col = "Landscape") +
+  scale_x_continuous(breaks = round(seq(130, 200, by = 10),1)) +
+  scale_y_continuous(breaks = round(seq(0, 80, by = 10),1)) +
+  facet_wrap(~session,nrow=3)
+N_timeday
+
+
+
+#### old stuff, check to see if it's useful
 p<-ggplot(data=richness,aes(x=julian,y=S,col=site,shape=session)) + geom_point() + theme_bw() + geom_smooth(method="lm") + facet_wrap(~vegtype,nrow=3)
 ggsave("incredible.svg",height=9,width=8)
 
-p<-ggplot(data = spcount, aes(x=spcode, y = N, fill = site)) + geom_bar(position = "dodge") 
-p + theme_bw() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(x="Species",y="Count",fill="Site")
 
-+ ggplot(data=richness,aes(x=julian,y=S,col=site,shape=session))
+ggplot(data=richness,aes(x=julian,y=S,col=site,shape=session))
 
 ## Plot richness as a function of site   
 siterichness <- ggplot(richnesssite, aes(x=site, y=S)) + xlab("Site") + 
