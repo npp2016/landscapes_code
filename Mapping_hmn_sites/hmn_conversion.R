@@ -1,4 +1,4 @@
-setwd("C://Users//Anusha/Desktop/Stony Brook/Catherine lab/NASA_andOther_Grants/hmn susan")
+setwd("C://Users//Anusha/Documents/GitHub/landscapes_code/")
 
 ## Reading in csv file with locations
 hmndms <- read.csv("dms2dd.csv")
