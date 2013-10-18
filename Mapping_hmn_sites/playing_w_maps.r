@@ -1,3 +1,7 @@
+#This code imports site coordinates for the Hummingbird Monitoring Network, converts degrees, minutes,
+#seconds to decimal degrees, and plots the data on a map of North America
+#Sarah R. Supp and Anusha Shankar
+
 library(maps)
 library(mapdata)
 library(maptools)
@@ -15,7 +19,7 @@ hmn <- read.csv("C://Users//Anusha/Desktop/Stony Brook/Catherine lab/NASA_andOth
 
 ## Function to convert degree minute seconds to decimal degrees
 convert <-function(coord){
-  tmp1 <- strsplit(coord,"°")
+  tmp1 <- strsplit(coord,"?")
   tmp2 <- strsplit(tmp1[[1]][2],"'")
   tmp3 <- strsplit(tmp2[[1]][2],"\"")
   dec <- c(as.numeric(tmp1[[1]][1]),as.numeric(tmp2[[1]][1]),as.numeric(tmp3[[1]]))
