@@ -42,23 +42,21 @@ names(richness) <- c("julian", "session", "site", "vegtype", "S")
 #order the factors for session (will always want to plot in chronological order by day)
 richness$session <- factor(richness$session,levels = c('Morning', 'Midday','Afternoon'),ordered = TRUE)
 
-## Make a table for species richness at each site     
+## Species richness at each site     
 richnesssite <- aggregate(obs$Species.Code, by=list(obs$Site), FUN=function(u) length(unique(u)))
 names(richnesssite) <- c("site", "S")
 
-## Richness by vegetation type?    
-richnessveg <- aggregate(obs$Species.Code, by=list(obs$Vegetation.Type), FUN=function(u) length(unique(u)))
-names(richnessveg) <- c("veg_type", "S")
-
-## Make a table for species counts by site
+## Total number of individuals of species at each site
 spcount = t(table(obs$Species.Code, obs$Site))
 spcount = melt(spcount)
   names(spcount) = c("site", "spcode", "N")
 
+## Count the number of individuals seen at each site on each day
 n = table(obs$julian, obs$Site)
 n = melt(n)
 names(n) <- c("julian", "site", "N")
 
+## Count the number of individuals seen at each site, during each session on each day
 ntime = table(obs$julian, obs$Session, obs$Site)
 ntime = melt(ntime)
 names(ntime) <- c("julian", "session", "site", "N")
@@ -72,9 +70,16 @@ sitespecies <- ggplot(obs, aes(x=Site, y=Species.Code)) + ylab("Species") +
   geom_point(col="indianred") + theme_bw()
 sitespecies
 
+## Compare the total number of species seen in each landscape
+landscape_richness <- ggplot(data = richnesssite, aes(x = site, y = S, fill = site)) + 
+  geom_bar(position = "dodge") + labs(x="",y="Species Richness",fill="Landscape") +
+  scale_y_continuous(breaks = round(seq(0, 10, by = 1),1)) + theme_bw()
+landscape_richness
+
 ## Plot the number of individuals of each species seen in the two landscapes
-p <- ggplot(data = spcount, aes(x=spcode, y = N, fill = site)) + geom_bar(position = "dodge") 
-p + theme_bw() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(x="Species",y="Count",fill="Site")
+species_counts <- ggplot(data = spcount, aes(x=spcode, y = N, fill = site)) + geom_bar(position = "dodge") +
+  theme_bw() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(x="Species",y="Count",fill="Site")
+species_counts
 
 ## Plot the number of individuals counted at each site over time
 N_timeseries <- ggplot(n, aes(x=julian, y=N, col=site)) + geom_point() + geom_line() +
