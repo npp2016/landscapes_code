@@ -6,11 +6,29 @@ library(RgoogleMaps)
 library(ggplot2)
 library(ggmap)
 
-wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/NASA_Anusha/"
+wd = "C://Users/Anusha/Documents/Dropbox/NASA_Anusha/"
 setwd(wd)
 
 #read in data
-hmn = read.csv("HMN_Map_Data_2013_3.csv", sep = ",", header = T)
+## hmn = read.csv("HMN_Map_Data_2013_3.csv", sep = ",", header = T)
+hmn <- read.csv("C://Users//Anusha/Desktop/Stony Brook/Catherine lab/NASA_andOther_Grants/hmn susan/dms2dd.csv")
+
+## Function to convert degree minute seconds to decimal degrees
+convert <-function(coord){
+  tmp1 <- strsplit(coord,"°")
+  tmp2 <- strsplit(tmp1[[1]][2],"'")
+  tmp3 <- strsplit(tmp2[[1]][2],"\"")
+  dec <- c(as.numeric(tmp1[[1]][1]),as.numeric(tmp2[[1]][1]),as.numeric(tmp3[[1]]))
+  c <-abs(dec[1])+dec[2]/60+dec[3]/3600
+  c <-ifelse(dec[1]<0,-c,c)
+  return(c)
+}
+
+## Run loop to use convert() function
+for(i in 1:n){
+  hmn$latdd[i] <- convert(as.character(hmn$Latitude_dont[i]))
+  hmn$londd[i] <- (-1)*(convert(as.character(hmn$Longitude_dont[i])))
+}
 
 #add column that shows if sites are currently active
 status = c()
@@ -20,7 +38,7 @@ for (i in 1:length (hmn$Last_active_year)){
   else { s = "inactive"}
   status = append(status, s)
   }
-cbind(hmn, status)
+hmn <- cbind(hmn, status)
 
 #################### MAKE SWEET MAPS ########
 # tutorial by K. Gilbert: http://www.molecularecologist.com/2012/09/making-maps-with-r/
@@ -30,6 +48,7 @@ map("worldHires","usa", xlim=c(-128,-94), ylim=c(17,53), col="gray90", fill=T)
 map("worldHires", "Canada", xlim=c(-128,-94), ylim=c(53,64), col="gray95", fill = TRUE, add=T)
 map("worldHires", "Mexico", xlim=c(-128,-94), ylim=c(10,17), col="gray95", fill=T, add=T)
 points(hmn$longitude, hmn$latitude, pch=19, col="red", cex=0.5)  #plot my sample sites
+points(hmn$londd, hmn$latdd, pch=19, col="blue", cex=0.5)  #plot my sample sites
 
 ########## Make Even Sweeter R Google Maps
 
@@ -54,19 +73,20 @@ terrain_close <- GetMap.bbox(lonR=range(lon), latR=range(lat), center=c(37,-111)
 # tutorial by D. Kahle & H. Wickham http://www.slideshare.net/ajayohri/sexy-maps-comes-to-r-ggplot-google-maps-ggmap-rstats
 
 # next try tutorial for mapping on google
-df = data.frame(x=hmn$longitude, y = hmn$latitude)
+df = data.frame(x=hmn$londd, y = hmn$latdd)
 map <- get_googlemap(center=c(-111,37), markers=df, scale = 1, maptype="terrain", zoom = 4)
 ggmap(map, extent='device')
 
 #make a map with a legend - BEST ONE SO FAR!!
 hmnmap <- qmap("Flagstaff, AZ", zoom = 4, color = "bw", legend = "bottomleft")
-hmnmap +
-  geom_point(aes(x = longitude, y = latitude, colour = status, size = No_of_years),
+no_years <- hmnmap +
+  geom_point(aes(x = londd, y = latdd, colour = status, size = No_of_years),
              data = hmn)
+no_years
 
-hmnmap +
-  geom_point(aes(x = longitude, y = latitude, colour = status),
-             data = hmn) +
+active_sites <- hmnmap +
+  geom_point(aes(x = londd, y = latdd, colour = status), data = hmn) +
   scale_color_manual(values = c("red", "black"))
+active_sites
 
-
+ggsave(filename="Active_sites.jpeg", plot=active_sites, type="jpeg")
