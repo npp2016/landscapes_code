@@ -10,12 +10,12 @@ library(RgoogleMaps)
 library(ggplot2)
 library(ggmap)
 
-wd = "C://Users/Anusha/Documents/Dropbox/NASA_Anusha/"
+#wd = "C://Users/Anusha/Documents/Dropbox/NASA_Anusha/"
+wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/NASA_Anusha/"
 setwd(wd)
 
-#read in data
-## hmn = read.csv("HMN_Map_Data_2013_3.csv", sep = ",", header = T)
-hmn <- read.csv("C://Users//Anusha/Desktop/Stony Brook/Catherine lab/NASA_andOther_Grants/hmn susan/dms2dd.csv")
+#read in coordinate data
+hmn = read.csv("dms2dd.csv", sep = ",", header = T)
 
 ## Function to convert degree minute seconds to decimal degrees
 convert <-function(coord){
