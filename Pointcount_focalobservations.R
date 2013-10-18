@@ -3,6 +3,7 @@
 # developed by: Anusha Shankar, Sarah Supp, and Catherine Graham
 
 ## Load packages
+library(chron)
 library(ggplot2)
 library(reshape)
 library(vegan)
@@ -17,6 +18,13 @@ setwd(wd)
 pointdata <- read.csv("updated_FocalObservationPointCountData.csv", na.strings="NA", sep=",", header=T)
 
 #----------CLEANING AND AGGREGATING THE DATA
+
+## Add a column for julian day, to help plot time series data
+for (row in 1:nrow(pointdata)){
+  line = pointdata[row,]
+  pointdata$julian[row] = julian(line$Month, line$Day, line$Year, origin. = c(month=1, day=1, year=line$Year))
+}
+
 ## subset only data from the two main landscapes
 pointdata = subset(pointdata, Site == "HC" | Site == "PL/SC")
 
@@ -24,9 +32,9 @@ pointdata = subset(pointdata, Site == "HC" | Site == "PL/SC")
 obs = subset(pointdata, Species.Code!="None")
 
 ## Aggregate data; count the number of species seen at each session
-richness <- aggregate(obs$Species.Code, by=list(obs$Month, obs$Day, obs$Year, obs$Session, 
-                                                obs$Site, obs$Vegetation.Type), FUN=function(u) length(unique(u)))
-names(richness) <- c("month", "day", "year", "session", "site", "vegtype", "S")
+richness <- aggregate(obs$Species.Code, by=list(obs$julian, obs$Session, obs$Site, obs$Vegetation.Type),
+                      FUN=function(u) length(unique(u)))
+names(richness) <- c("julian", "session", "site", "vegtype", "S")
 
 #order the factors for session (will always want to plot in chronological order by day)
 richness$session <- factor(richness$session,levels = c('Morning', 'Midday','Afternoon'),ordered = TRUE)
@@ -62,10 +70,9 @@ vegrichness <- ggplot(richnessveg, aes(x=veg_type, y=S)) + xlab("Site") +
 vegrichness
 
 ## Plot number of species seen at different times of day
-qplot(data=richness, x=session, y=S, geom="boxplot")
+qplot(data=richness, x=session, y=S, geom="boxplot", color = session)
 qplot(data=richness, x=session, y=S, geom="boxplot", ylab="Species", facets = ~site, color = session) + theme_bw()
 
-##diversity(x=)
 
 #----- TODO:
 #plot richness as a function of time
