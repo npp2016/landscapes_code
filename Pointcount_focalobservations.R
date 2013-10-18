@@ -16,7 +16,10 @@ setwd(wd)
 ## Reading in point count and focal observation data
 pointdata <- read.csv("updated_FocalObservationPointCountData.csv", na.strings="NA", sep=",", header=T)
 
-#----------Cleaning and Aggregating the data
+#----------CLEANING AND AGGREGATING THE DATA
+## subset only data from the two main landscapes
+pointdata = subset(pointdata, Site == "HC" | Site == "PL/SC")
+
 ## subset data that does not include surveys where no birds were seen
 obs = subset(pointdata, Species.Code!="None")
 
@@ -24,6 +27,7 @@ obs = subset(pointdata, Species.Code!="None")
 richness <- aggregate(obs$Species.Code, by=list(obs$Month, obs$Day, obs$Year, obs$Session, 
                                                 obs$Site, obs$Vegetation.Type), FUN=function(u) length(unique(u)))
 names(richness) <- c("month", "day", "year", "session", "site", "vegtype", "S")
+
 #order the factors for session (will always want to plot in chronological order by day)
 richness$session <- factor(richness$session,levels = c('Morning', 'Midday','Afternoon'),ordered = TRUE)
 
@@ -40,7 +44,7 @@ names(richnessveg) <- c("veg_type", "S")
 ## Make a table for species counts by site
 spcount = t(table(obs$Species.Code, obs$Site))
 
-#---------- Plotting the data
+#---------- PLOTTING THE DATA
 
 ## Plot species vs. site
 sitespecies <- ggplot(pointdata, aes(x=Site, y=Species.Code)) + ylab("Species") + 
