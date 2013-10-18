@@ -30,6 +30,9 @@ pointdata = subset(pointdata, Site == "HC" | Site == "PL/SC")
 
 ## subset data that does not include surveys where no birds were seen
 obs = subset(pointdata, Species.Code!="None")
+  obs$Site <- factor(obs$Site, levels = c('HC', 'PL/SC'))
+  obs$Species.Code <- factor(obs$Species.Code, levels = c("ANHU", "BBLH", "BCHU", "BLTH", "COHU", "MAHU", "RUHU", "VCHU", "UNHU"))
+
 
 ## Aggregate data; count the number of species seen at each session
 richness <- aggregate(obs$Species.Code, by=list(obs$julian, obs$Session, obs$Site, obs$Vegetation.Type),
@@ -40,22 +43,21 @@ names(richness) <- c("julian", "session", "site", "vegtype", "S")
 richness$session <- factor(richness$session,levels = c('Morning', 'Midday','Afternoon'),ordered = TRUE)
 
 ## Make a table for species richness at each site     
-richnesssite <- aggregate(obs$Species.Code, by=list(obs$Site), 
-                      FUN=function(u) length(unique(u)))
+richnesssite <- aggregate(obs$Species.Code, by=list(obs$Site), FUN=function(u) length(unique(u)))
 names(richnesssite) <- c("site", "S")
 
 ## Richness by vegetation type?    
-richnessveg <- aggregate(obs$Species.Code, by=list(obs$Vegetation.Type), 
-                         FUN=function(u) length(unique(u)))
+richnessveg <- aggregate(obs$Species.Code, by=list(obs$Vegetation.Type), FUN=function(u) length(unique(u)))
 names(richnessveg) <- c("veg_type", "S")
 
 ## Make a table for species counts by site
 spcount = t(table(obs$Species.Code, obs$Site))
 
+
 #---------- PLOTTING THE DATA
 
 ## Plot species vs. site
-sitespecies <- ggplot(pointdata, aes(x=Site, y=Species.Code)) + ylab("Species") + 
+sitespecies <- ggplot(obs, aes(x=Site, y=Species.Code)) + ylab("Species") + 
   geom_point(col="red") + theme_bw()
 sitespecies
 
