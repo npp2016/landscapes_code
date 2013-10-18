@@ -6,7 +6,6 @@
 library(chron)
 library(ggplot2)
 library(reshape)
-library(vegan)
 
 
 ##### CHOOSE WORKING DIRECTORY (uncomment the one you like)
@@ -16,6 +15,7 @@ setwd(wd)
 
 ## Reading in point count and focal observation data
 pointdata <- read.csv("updated_FocalObservationPointCountData.csv", na.strings="NA", sep=",", header=T)
+
 
 #----------CLEANING AND AGGREGATING THE DATA
 
@@ -33,14 +33,16 @@ obs = subset(pointdata, Species.Code!="None")
   obs$Site <- factor(obs$Site, levels = c('HC', 'PL/SC'))
   obs$Species.Code <- factor(obs$Species.Code, levels = c("ANHU", "BBLH", "BCHU", "BLTH", "COHU", "MAHU", "RUHU", "VCHU", "UNHU"))
 
-
-## Aggregate data; count the number of species seen at each session
-richness <- aggregate(obs$Species.Code, by=list(obs$julian, obs$Session, obs$Site, obs$Vegetation.Type),
+## Aggregate data; count the number of species seen at each session on each day in each site
+richnesstime <- aggregate(obs$Species.Code, by=list(obs$julian, obs$Session, obs$Site),
                       FUN=function(u) length(unique(u)))
-names(richness) <- c("julian", "session", "site", "vegtype", "S")
+names(richnesstime) <- c("julian", "session", "site", "S")
+richnesstime$session <- factor(richnesstime$session, levels = c('Morning', 'Midday','Afternoon'),ordered = TRUE)
 
-#order the factors for session (will always want to plot in chronological order by day)
-richness$session <- factor(richness$session,levels = c('Morning', 'Midday','Afternoon'),ordered = TRUE)
+## Aggregate data; count the number of species seen on each day in each site
+richnessday <- aggregate(obs$Species.Code, by=list(obs$julian, obs$Site),
+                          FUN=function(u) length(unique(u)))
+names(richnessday) <- c("julian", "site", "S")
 
 ## Species richness at each site     
 richnesssite <- aggregate(obs$Species.Code, by=list(obs$Site), FUN=function(u) length(unique(u)))
@@ -81,6 +83,33 @@ species_counts <- ggplot(data = spcount, aes(x=spcode, y = N, fill = site)) + ge
   theme_bw() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(x="Species",y="Count",fill="Site")
 species_counts
 
+## Plot the number of species at each site over time
+S_timeseries <- ggplot(richnessday, aes(x=julian, y=S, col=site)) + geom_point() + geom_line() +
+  theme_bw() + labs(x="Julian Day", y="Species Richness", col = "Landscape") +
+  scale_x_continuous(breaks = round(seq(130, 200, by = 10),1)) +
+  scale_y_continuous(breaks = round(seq(0, 6, by = 1),1))
+S_timeseries
+
+## Plot the number of species at each site over time, and separately for each time of day
+S_timeday <- ggplot(richnesstime, aes(x=julian, y=S, col=site)) + geom_point() + geom_line() +
+  theme_bw() + labs(x="Julian Day", y="Species Richness", col = "Landscape") +
+  scale_x_continuous(breaks = round(seq(130, 200, by = 10),1)) +
+  scale_y_continuous(breaks = round(seq(1, 8, by = 1),1)) +
+  facet_wrap(~session,nrow=3)
+S_timeday
+
+## Plot number of species seen at different times of day
+session_richness <- ggplot(richnesstime, aes(x=session, y=S, fill=session)) + 
+  geom_boxplot() + theme_bw() + facet_wrap(~site) + 
+  labs(x="Time of Day", y="Species Richness", col = "Time of Day")
+session_richness
+
+## Plot number of individualss seen at different times of day
+session_abundance <- ggplot(ntime, aes(x=session, y=N, fill=session)) + 
+  geom_boxplot() + theme_bw() + facet_wrap(~site) + 
+  labs(x="Time of Day", y="Species Richness", col = "Time of Day")
+session_abundance
+                           
 ## Plot the number of individuals counted at each site over time
 N_timeseries <- ggplot(n, aes(x=julian, y=N, col=site)) + geom_point() + geom_line() +
   theme_bw() + labs(x="Julian Day", y="Number of Hummingbirds", col = "Landscape") +
@@ -96,32 +125,6 @@ N_timeday <- ggplot(ntime, aes(x=julian, y=N, col=site)) + geom_point() + geom_l
   facet_wrap(~session,nrow=3)
 N_timeday
 
-
-
-#### old stuff, check to see if it's useful
-p<-ggplot(data=richness,aes(x=julian,y=S,col=site,shape=session)) + geom_point() + theme_bw() + geom_smooth(method="lm") + facet_wrap(~vegtype,nrow=3)
-ggsave("incredible.svg",height=9,width=8)
-
-
-ggplot(data=richness,aes(x=julian,y=S,col=site,shape=session))
-
-## Plot richness as a function of site   
-siterichness <- ggplot(richnesssite, aes(x=site, y=S)) + xlab("Site") + 
-  ylab ("Species richness") + geom_boxplot() + theme_bw()
-siterichness
-
-## Plot richness as a function of vegetation type    #FIXME: x axes are not readable
-vegrichness <- ggplot(richnessveg, aes(x=veg_type, y=S)) + xlab("Site") + 
-  ylab ("Species richness") + geom_point() + geom_point(size=3) + theme_bw()
-vegrichness
-
-## Plot number of species seen at different times of day
-qplot(data=richness, x=session, y=S, geom="boxplot", color = session)
-qplot(data=richness, x=session, y=S, geom="boxplot", ylab="Species", facets = ~site, color = session) + theme_bw()
-
-
 #----- TODO:
-#plot richness as a function of time
 #compare abundances across sites and habitat types
 #should we include data from both point counts and focal obs together or separately?
-#convert mo-day-yr to julian date to enable plotting of timeseries data?
