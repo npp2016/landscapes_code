@@ -64,66 +64,59 @@ spcount = melt(spcount)
 n = table(obs$julian, obs$Site)
 n = melt(n)
 names(n) <- c("julian", "site", "N")
+n = subset(n, N!=0) #because this fxn assumed we sampled on the same dates (zeroes not included here)
 
 ## Count the number of individuals seen at each site, during each session on each day
 ntime = table(obs$julian, obs$Session, obs$Site)
 ntime = melt(ntime)
 names(ntime) <- c("julian", "session", "site", "N")
 ntime$session <- factor(ntime$session,levels = c('Morning', 'Midday','Afternoon'),ordered = TRUE)
-
+ntime = subset(ntime, N!=0) #because we didn't sample on the same days
 
 #---------- PLOTTING THE DATA
 
 ## Plot species vs. site
 sitespecies <- ggplot(sppdata, aes(x=Site, y=Species.Code)) + ylab("Species") + 
   geom_point(col="indianred") + theme_bw()
-sitespecies
 
 ## Compare the total number of species seen in each landscape
 landscape_richness <- ggplot(data = richnesssite, aes(x = site, y = S, fill = site)) + 
   geom_bar(position = "dodge") + labs(x="",y="Species Richness",fill="Landscape") +
   scale_y_continuous(breaks = round(seq(0, 10, by = 1),1)) + theme_bw()
-landscape_richness
 
 ## Plot the number of individuals of each species seen in the two landscapes
 species_counts <- ggplot(data = spcount, aes(x=spcode, y = N, fill = site)) + geom_bar(position = "dodge") +
   theme_bw() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(x="Species",y="Count",fill="Site") +
   scale_y_continuous(breaks = round(seq(0, 250, by =25),1))
-species_counts
 
 ## Plot the number of species at each site over time
 S_timeseries <- ggplot(richnessday, aes(x=julian, y=S, col=site)) + geom_point() + geom_line() +
   theme_bw() + labs(x="Julian Day", y="Species Richness", col = "Landscape") +
-  scale_x_continuous(breaks = round(seq(130, 200, by = 10),1)) +
-  scale_y_continuous(breaks = round(seq(0, 6, by = 1),1))
-S_timeseries
+  scale_x_continuous(breaks = round(seq(130, 200, by = 5),1), limits=c(130, 200)) +
+  scale_y_continuous(breaks = round(seq(0, 5, by = 1),1), limits=c(1,4))
 
 ## Plot the number of species at each site over time, and separately for each time of day
 S_timeday <- ggplot(richnesstime, aes(x=julian, y=S, col=site)) + geom_point() + geom_line() +
   theme_bw() + labs(x="Julian Day", y="Species Richness", col = "Landscape") +
-  scale_x_continuous(breaks = round(seq(130, 200, by = 10),1)) +
+  scale_x_continuous(breaks = round(seq(130, 200, by = 5),1), limits=c(130, 200)) +
   scale_y_continuous(breaks = round(seq(1, 8, by = 1),1)) +
   facet_wrap(~session,nrow=3)
-S_timeday
 
 ## Plot number of species seen at different times of day
 session_richness <- ggplot(richnesstime, aes(x=session, y=S, fill=session)) + 
   geom_boxplot() + theme_bw() + facet_wrap(~site) + 
   labs(x="Time of Day", y="Species Richness", col = "Time of Day")
-session_richness
 
 ## Plot number of individualss seen at different times of day
 session_abundance <- ggplot(ntime, aes(x=session, y=N, fill=session)) + 
   geom_boxplot() + theme_bw() + facet_wrap(~site) + 
-  labs(x="Time of Day", y="Species Richness", col = "Time of Day")
-session_abundance
-                           
+  labs(x="Time of Day", y="Abundance", col = "Time of Day")
+          
 ## Plot the number of individuals counted at each site over time
 N_timeseries <- ggplot(n, aes(x=julian, y=N, col=site)) + geom_point() + geom_line() +
   theme_bw() + labs(x="Julian Day", y="Number of Hummingbirds", col = "Landscape") +
-  scale_x_continuous(breaks = round(seq(130, 200, by = 10),1)) +
-  scale_y_continuous(breaks = round(seq(0, 80, by = 10),1))
-N_timeseries
+  scale_x_continuous(breaks = round(seq(130, 200, by = 5),1), limits=c(130,200)) +
+  scale_y_continuous(breaks = round(seq(0, 80, by = 5),1), limits = c(0,80))
 
 ## Plot the number of individuals counted at each site over time and at each times of day
 N_timeday <- ggplot(ntime, aes(x=julian, y=N, col=site)) + geom_point() + geom_line() +
@@ -131,7 +124,6 @@ N_timeday <- ggplot(ntime, aes(x=julian, y=N, col=site)) + geom_point() + geom_l
   scale_x_continuous(breaks = round(seq(130, 200, by = 10),1)) +
   scale_y_continuous(breaks = round(seq(0, 80, by = 10),1)) +
   facet_wrap(~session,nrow=3)
-N_timeday
 
 #----- TODO:
 #compare abundances across sites and habitat types
