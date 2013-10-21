@@ -31,10 +31,11 @@ pointdata = subset(pointdata, Site == "HC" | Site == "PL/SC")
 ## subset data that does not include surveys where no birds were seen
 obs = subset(pointdata, Species.Code!="None")
   obs$Site <- factor(obs$Site, levels = c('HC', 'PL/SC'))
-  obs$Species.Code <- factor(obs$Species.Code, levels = c("ANHU", "BBLH", "BCHU", "BLTH", "COHU", "MAHU", "RUHU", "VCHU", "UNHU"))
+  obs$Species.Code <- factor(obs$Species.Code, levels = c("ANHU", "BBLH", "BCHU", "COHU", "RUHU", "VCHU", "UNHU"))
 
 #subset data that doesn't include species == NA or species == UNHU (for richness, don't care if we don't know identity)
 sppdata = subset(obs, Species.Code %in% c('ANHU', 'BBLH', 'BCHU', 'COHU', 'RUHU', 'VCHU'))
+  sppdata$Species.Code <- factor(sppdata$Species.Code, levels = c("ANHU", "BBLH", "BCHU", "COHU", "RUHU", "VCHU"))
 
 #subset data for each landscape
 hc = subset(obs, Site == "HC")
@@ -132,4 +133,7 @@ N_timeday <- ggplot(ntime, aes(x=julian, y=N, col=site)) + geom_point() + geom_l
 #compare abundances across sites and habitat types
 #should we include data from both point counts and focal obs together or separately?
 #for loop to chunk data into 2-week periods (label week 1, week 2)
-#for loop to indicate days/sessions when 0 species were seen. Not currently included.
+#for loop to indicate days/sessions when 0 species were seen. Not currently included - probably need to write a for loop to do this.
+#plot daily abundance scaled by number of transects sampled?
+#plot relative abundance of each species for the two sites?
+
