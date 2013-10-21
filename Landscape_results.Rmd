@@ -34,14 +34,14 @@ species_counts
 ```
 
 
-**Figure 4** The number of species observed each day. On both transects, 2-3 species of hummingbird were typically identified per day.
+**Figure 4** The number of species observed each day. On both transects, 2-3 species of hummingbird were typically identified per day. Points indicate the number of species seen on a day that observations occured. Lines simpy connect the points for each landscape across the timeseries.
 
 ```{r fig.width=8, fig.height = 4, echo = FALSE} 
 S_timeseries
 ```
 
 
-**Figure 5** Comparing species richness of each site at the different times of day. There seems to be a slightly higher likelihood that more species will be seen in the morning that middday or afternoon, but in general, 2-3 species were seen each time an observation was done.
+**Figure 5** Comparing species richness of each site at the different times of day. There seems to be a slightly higher likelihood that more species will be seen in the morning that middday or afternoon, but in general, 2-3 species were seen per sampling session.
 
 ```{r fig.width=6, fig.height = 7, echo = FALSE} 
 S_timeday
@@ -62,17 +62,17 @@ session_abundance
 ```
 
 
-**Figure 8** More individuals were see in the morning that midday or afternoon sampling. 
-
-```{r fig.width=8, fig.height = 6, echo = FALSE} 
-N_timeday
-```
-
-
-**Figure 9** The number of individuals counted at each site, on each day sampled. Higher abundance was typically observed at Harshaw Creek.
+**Figure 8** The number of individuals counted at each site, on each day sampled. Higher abundance was typically observed at Harshaw Creek.
 
 ```{r fig.width=8, fig.height = 4, echo = FALSE} 
 N_timeseries
+```
+
+
+**Figure 9** More individuals were see in the morning that midday or afternoon sampling. 
+
+```{r fig.width=8, fig.height = 6, echo = FALSE} 
+N_timeday
 ```
 
 
