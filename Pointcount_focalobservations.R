@@ -33,19 +33,26 @@ obs = subset(pointdata, Species.Code!="None")
   obs$Site <- factor(obs$Site, levels = c('HC', 'PL/SC'))
   obs$Species.Code <- factor(obs$Species.Code, levels = c("ANHU", "BBLH", "BCHU", "BLTH", "COHU", "MAHU", "RUHU", "VCHU", "UNHU"))
 
-## Aggregate data; count the number of species seen at each session on each day in each site
-richnesstime <- aggregate(obs$Species.Code, by=list(obs$julian, obs$Session, obs$Site),
+#subset data that doesn't include species == NA or species == UNHU (for richness, don't care if we don't know identity)
+sppdata = subset(obs, Species.Code %in% c('ANHU', 'BBLH', 'BCHU', 'COHU', 'RUHU', 'VCHU'))
+
+#subset data for each landscape
+hc = subset(obs, Site == "HC")
+pl = subset(obs, Site == "PL/SC")
+
+## Aggregate data; count the number of species seen at each session on each day in each site, not counting UNHU and NA
+richnesstime <- aggregate(sppdata$Species.Code, by=list(sppdata$julian, sppdata$Session, sppdata$Site),
                       FUN=function(u) length(unique(u)))
 names(richnesstime) <- c("julian", "session", "site", "S")
 richnesstime$session <- factor(richnesstime$session, levels = c('Morning', 'Midday','Afternoon'),ordered = TRUE)
 
 ## Aggregate data; count the number of species seen on each day in each site
-richnessday <- aggregate(obs$Species.Code, by=list(obs$julian, obs$Site),
+richnessday <- aggregate(sppdata$Species.Code, by=list(sppdata$julian, sppdata$Site),
                           FUN=function(u) length(unique(u)))
 names(richnessday) <- c("julian", "site", "S")
 
 ## Species richness at each site     
-richnesssite <- aggregate(obs$Species.Code, by=list(obs$Site), FUN=function(u) length(unique(u)))
+richnesssite <- aggregate(sppdata$Species.Code, by=list(sppdata$Site), FUN=function(u) length(unique(u)))
 names(richnesssite) <- c("site", "S")
 
 ## Total number of individuals of species at each site
@@ -68,7 +75,7 @@ ntime$session <- factor(ntime$session,levels = c('Morning', 'Midday','Afternoon'
 #---------- PLOTTING THE DATA
 
 ## Plot species vs. site
-sitespecies <- ggplot(obs, aes(x=Site, y=Species.Code)) + ylab("Species") + 
+sitespecies <- ggplot(sppdata, aes(x=Site, y=Species.Code)) + ylab("Species") + 
   geom_point(col="indianred") + theme_bw()
 sitespecies
 
@@ -80,7 +87,8 @@ landscape_richness
 
 ## Plot the number of individuals of each species seen in the two landscapes
 species_counts <- ggplot(data = spcount, aes(x=spcode, y = N, fill = site)) + geom_bar(position = "dodge") +
-  theme_bw() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(x="Species",y="Count",fill="Site")
+  theme_bw() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(x="Species",y="Count",fill="Site") +
+  scale_y_continuous(breaks = round(seq(0, 250, by =25),1))
 species_counts
 
 ## Plot the number of species at each site over time
