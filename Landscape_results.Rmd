@@ -1,0 +1,80 @@
+```{r, echo=FALSE, results='hide'}
+source('/Users/sarah/Documents/GitHub/landscapes_code/Pointcount_focalobservations.r')
+```
+
+**Title:** Preliminary figures and results from the Hummingbird Monitoring Network landscapes data
+========================================================
+**Code & Analysis** 
+--------------------------------------
+Sarah R. Supp, Anusha Shankar, Tina Cormier
+
+**Results**
+------------------
+We compared hummingbird observations between two landscapes at Harshaw Creek and Patagonia Lake, near Patagoinia, AZ. Observations took place 14 May to 16 July, 2013. Harshaw Creek transects were sampled on `r length(unique(hc$julian))` days and Patagonia Lake transects were sampled on `r length(unique(pl$julian))` days. There were `r length(unique(hc$Transect))` transects at Harshaw Creek and `r length(unique(pl$Transect))` transects at Patagonia Lake. Below, we compare the number of species and the number of individuals seen at both sites, across the timeseries.
+
+
+**Figure 1** There were `r richnesssite[1,2]` species observed in Harshaw Creek and `r richnesssite[2,2]` species observed at Patagonia Lake.
+
+```{r fig.width=3, fig.height=4, echo=FALSE}
+landscape_richness
+```
+
+
+**Figure 2** Table of the species seen in the two landscapes. Violet-crowned hummingbird was observed `r nrow(subset(pl, Species.Code == "VCHU"))` times at Patagonia Lake. Rufous hummingbird was seen `r nrow(subset(hc, Species.Code == "RUHU"))` times and Costa's hummingbird was seen `r nrow(subset(hc, Species.Code == "COHU"))` time at Harshaw Creek.
+
+```{r fig.width=3, fig.height=4, echo=FALSE}
+sitespecies
+```
+
+
+**Figure 3** The number of times each species species was observed in each landscape. Note that 'UNHU' is an unidentified species of hummingbird. The most common in both landscapes were Broad-billed and Black-chnned hummingbirds. 
+
+```{r fig.width=8, fig.height = 4, echo = FALSE} 
+species_counts
+```
+
+
+**Figure 4** The number of species observed each day. On both transects, 2-3 species of hummingbird were typically identified per day.
+
+```{r fig.width=8, fig.height = 4, echo = FALSE} 
+S_timeseries
+```
+
+
+**Figure 5** Comparing species richness of each site at the different times of day. There seems to be a slightly higher likelihood that more species will be seen in the morning that middday or afternoon, but in general, 2-3 species were seen each time an observation was done.
+
+```{r fig.width=6, fig.height = 7, echo = FALSE} 
+S_timeday
+```
+
+
+**Figure 6** Differences in species richness by time of day (which are small) are stronger in the Harshaw Creek sites.
+
+```{r fig.width=5, fig.height = 3, echo = FALSE} 
+session_richness
+```
+
+
+**Figure 7** Many more individuals were observed in the morning than midday or afternoon. And more individuals, in general, were seen at Harshaw Creek (which was also sampled more often...)
+
+```{r fig.width=5, fig.height = 3, echo = FALSE} 
+session_abundance
+```
+
+
+**Figure 8** More individuals were see in the morning that midday or afternoon sampling. 
+
+```{r fig.width=8, fig.height = 6, echo = FALSE} 
+N_timeday
+```
+
+
+**Figure 9** The number of individuals counted at each site, on each day sampled. Higher abundance was typically observed at Harshaw Creek.
+
+```{r fig.width=8, fig.height = 4, echo = FALSE} 
+N_timeseries
+```
+
+
+We will work on analyzing the vegetation structure dataset next. In the point count dataset, there is a vegetation type variable, but we were unsure of how to use it. The vegetation types seem too specific to plot and compare, and there is potentially a lot of overlap among the different types (e.g., Ocotillo/Grass, Grass/Ocotillo/Mesquite, Ocotillo/Mesquite). According to the dataset there are 15 vegetation types, but there are only only 17 transects between the two landscapes. Since nearly every single transect is considered unique using this method, plotting comparisons doesn't really work. If there is a more discrete habitat type that we could use (e.g., desert, woodland, riparian), that could be more helpful. 
+
