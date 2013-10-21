@@ -131,3 +131,5 @@ N_timeday <- ggplot(ntime, aes(x=julian, y=N, col=site)) + geom_point() + geom_l
 #----- TODO:
 #compare abundances across sites and habitat types
 #should we include data from both point counts and focal obs together or separately?
+#for loop to chunk data into 2-week periods (label week 1, week 2)
+#for loop to indicate days/sessions when 0 species were seen. Not currently included.
