@@ -87,7 +87,8 @@ landscape_richness <- ggplot(data = richnesssite, aes(x = site, y = S, fill = si
 ## Plot the number of individuals of each species seen in the two landscapes
 species_counts <- ggplot(data = spcount, aes(x=spcode, y = N, fill = site)) + geom_bar(position = "dodge") +
   theme_bw() + theme(axis.text.x = element_text(angle = 90, hjust = 1)) + labs(x="Species",y="Count",fill="Site") +
-  scale_y_continuous(breaks = round(seq(0, 250, by =25),1))
+  scale_y_continuous(breaks = round(seq(0, 250, by =25),1)) +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))
 
 ## Plot the number of species at each site over time
 S_timeseries <- ggplot(richnessday, aes(x=julian, y=S, col=site)) + geom_point() + geom_line() +
@@ -105,12 +106,14 @@ S_timeday <- ggplot(richnesstime, aes(x=julian, y=S, col=site)) + geom_point() +
 ## Plot number of species seen at different times of day
 session_richness <- ggplot(richnesstime, aes(x=session, y=S, fill=session)) + 
   geom_boxplot() + theme_bw() + facet_wrap(~site) + 
-  labs(x="Time of Day", y="Species Richness", col = "Time of Day")
+  labs(x="Time of Day", y="Species Richness", col = "Time of Day") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))
 
 ## Plot number of individualss seen at different times of day
 session_abundance <- ggplot(ntime, aes(x=session, y=N, fill=session)) + 
   geom_boxplot() + theme_bw() + facet_wrap(~site) + 
-  labs(x="Time of Day", y="Abundance", col = "Time of Day")
+  labs(x="Time of Day", y="Abundance", col = "Time of Day") +
+  theme(axis.text.x = element_text(angle = 60, hjust = 1))
           
 ## Plot the number of individuals counted at each site over time
 N_timeseries <- ggplot(n, aes(x=julian, y=N, col=site)) + geom_point() + geom_line() +
