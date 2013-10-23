@@ -1,6 +1,7 @@
 # This code is to run exploratory analyses on observational data 
 # from the Summer 2013 field study in Patagonia, AZ
-# developed by: Anusha Shankar, Sarah Supp, and Catherine Graham
+# This code deals witht the point count and focal observation data. Intern to contact: Brittany
+# Code developed by: Anusha Shankar, Sarah Supp, and Catherine Graham
 
 ## Load packages
 library(chron)
