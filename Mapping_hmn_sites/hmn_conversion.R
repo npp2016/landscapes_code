@@ -1,4 +1,4 @@
-setwd("C://Users//Anusha/Documents/GitHub/landscapes_code/")
+setwd("C://Users//Anusha/Documents/Dropbox/NASA_Anusha/")
 
 ## Reading in csv file with locations
 hmndms <- read.csv("dms2dd.csv")
