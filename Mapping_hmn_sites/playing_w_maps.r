@@ -14,35 +14,44 @@ library(ggmap)
 wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/NASA_Anusha/"
 setwd(wd)
 
-#read in coordinate data
-hmn = read.csv("dms2dd.csv", sep = ",", header = T)
+## I've saved the dms file with the corrected values as a new csv, so we don't have to run the convert()
+## code again. Leaving the function in just in case, minimized
+hmn <- read.csv("dmsdd_corrected.csv", sep = ",", header = T)
+
+##############
+#read in coordinate data (old file)
+## hmn = read.csv("dms2dd.csv", sep = ",", header = T)
 
 ## Function to convert degree minute seconds to decimal degrees
-convert <-function(coord){
-  tmp1 <- strsplit(coord,"?")
-  tmp2 <- strsplit(tmp1[[1]][2],"'")
-  tmp3 <- strsplit(tmp2[[1]][2],"\"")
-  dec <- c(as.numeric(tmp1[[1]][1]),as.numeric(tmp2[[1]][1]),as.numeric(tmp3[[1]]))
-  c <-abs(dec[1])+dec[2]/60+dec[3]/3600
-  c <-ifelse(dec[1]<0,-c,c)
-  return(c)
-}
+##convert <-function(coord){
+#  tmp1 <- strsplit(coord,"?")
+#  tmp2 <- strsplit(tmp1[[1]][2],"'")
+#  tmp3 <- strsplit(tmp2[[1]][2],"\"")
+#  dec <- c(as.numeric(tmp1[[1]][1]),as.numeric(tmp2[[1]][1]),as.numeric(tmp3[[1]]))
+#  c <-abs(dec[1])+dec[2]/60+dec[3]/3600
+#  c <-ifelse(dec[1]<0,-c,c)
+#  return(c)
+##}
 
 ## Run loop to use convert() function
-for(i in 1:n){
-  hmn$latdd[i] <- convert(as.character(hmn$Latitude_dont[i]))
-  hmn$londd[i] <- (-1)*(convert(as.character(hmn$Longitude_dont[i])))
-}
+# n <- length(hmn$longitude)
+# for(i in 1:n){
+# hmn$latdd[i] <- convert(as.character(hmn$Latitude_dont[i]))
+#  hmn$londd[i] <- (-1)*(convert(as.character(hmn$Longitude_dont[i])))
+# }
 
-#add column that shows if sites are currently active
-status = c()
-for (i in 1:length (hmn$Last_active_year)){
-  if (hmn$Last_active_year[i] == 2013) {
-    s = "active"}
-  else { s = "inactive"}
-  status = append(status, s)
-  }
-hmn <- cbind(hmn, status)
+# add column that shows if sites are currently active
+# status = c()
+# for (i in 1:length (hmn$Last_active_year)){
+#  if (hmn$Last_active_year[i] == 2013) {
+#    s = "active"}
+#  else { s = "inactive"}
+#  status = append(status, s)
+#  }
+# hmn <- cbind(hmn, status)
+
+## Write to file for future use
+# write.csv(hmn, file="dmsdd_corrected.csv")
 
 #################### MAKE SWEET MAPS ########
 # tutorial by K. Gilbert: http://www.molecularecologist.com/2012/09/making-maps-with-r/
