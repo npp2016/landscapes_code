@@ -9,8 +9,8 @@ library(reshape)
 
 ##### CHOOSE WORKING DIRECTORY (uncomment the one you like)
 ## There are four separate .csv files in this folder
-wd = "C://Users/Anusha/Documents/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Vegetation_Structure_data/"
-#wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Vegetation_Structure_data/"
+wd = "C://Users/Anusha/Documents/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Excel_CSV_versionsVegetation_Structure_data/"
+#wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Excel_CSV_versions/Vegetation_Structure_data/"
 setwd(wd)
 
 ## Read in csv files
