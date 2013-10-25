@@ -23,14 +23,14 @@ genus_key <- read.csv("GenusKey.csv")
 tree_shrub <- read.csv("TreeAndShrubSize.csv")
 
 ## Cleaning and aggregating data
-aggcanopy <- melt(data=canopy, id.vars="Site", measure.vars=c("percent_canopy_cover", 
-                    "Percent_densitometry", "percent_water_groundcover"), na.rm=T)
+m_canopy <- melt(data=canopy, id.vars="Site", measure.vars=c("percent_canopy_cover", 
+                   "percent_subcanopy_cover", "percent_branches_without_leaves"), na.rm=T)
 ## Not working! Need to fix blanks
 shrubdescrip <- melt(data=tree_shrub, id.vars="Point", measure.vars=c("Genus", "Height", "DBH_class"), na.rm=T)
 
 ## Plots
 # Canopy cover by site
-cc_site <- ggplot(canopy, aes(x=Site, y=percent_canopy_cover)) + geom_boxplot()
+cc_site <- ggplot(m_canopy, aes(x=Site, fill=variable)) + geom_bar()
 cc_site
 
 # Densitometry by site
