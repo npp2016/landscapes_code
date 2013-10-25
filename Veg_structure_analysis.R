@@ -17,16 +17,15 @@ setwd(wd)
 canopy <- read.csv("CanopyAndGroundCover.csv")
 siteveg_descrip <- read.csv("SiteVegetationDescriptors.csv")
 genus_key <- read.csv("GenusKey.csv")
-
-## This tree_shrub dataset is very confusing, has way too many blanks. Need to speak about how to correct this.
-## The melt() function gets very confused with the blanks.
-tree_shrub <- read.csv("TreeAndShrubSize.csv")
+trees <- read.csv("trees.csv")
+shrubs <- read.csv("shrubs.csv")
 
 ## Cleaning and aggregating data
 m_canopy <- melt(data=canopy, id.vars="Site", measure.vars=c("percent_canopy_cover", 
                    "percent_subcanopy_cover", "percent_branches_without_leaves"), na.rm=T)
-## Not working! Need to fix blanks
-shrubdescrip <- melt(data=tree_shrub, id.vars="Point", measure.vars=c("Genus", "Height", "DBH_class"), na.rm=T)
+
+## Not working! Need to fix blanks FIXME
+treedescrip <- melt(data=trees, id.vars="Point", measure.vars=c("Genus", "Height", "DBH_class"), na.rm=T)
 
 ## Plots
 # Canopy cover by site
