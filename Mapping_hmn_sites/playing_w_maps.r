@@ -9,6 +9,7 @@ library(scales)
 library(RgoogleMaps)
 library(ggplot2)
 library(ggmap)
+library(RColorBrewer)
 
 #wd = "C://Users/Anusha/Documents/Dropbox/NASA_Anusha/"
 wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/NASA_Anusha/"
@@ -91,10 +92,10 @@ map <- get_googlemap(center=c(-111,37), markers=df, scale = 1, maptype="terrain"
 ggmap(map, extent='device')
 
 #make a map with a legend - BEST ONE SO FAR!!
-hmnmap <- qmap("Flagstaff, AZ", zoom = 4, color = "bw", legend = "bottomleft")
+hmnmap <- qmap("Flagstaff, AZ", zoom = 4, legend = "bottomleft")
 no_years <- hmnmap +
   geom_point(aes(x = londd, y = latdd, colour = status, size = No_of_years),
-             data = hmn)
+             data = hmn) + scale_color_manual(values = c("#FA5882", "black")) # Points are right now pick and black
 no_years
 
 active_sites <- hmnmap +
