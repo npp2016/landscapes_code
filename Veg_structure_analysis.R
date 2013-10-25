@@ -9,7 +9,7 @@ library(reshape)
 
 ##### CHOOSE WORKING DIRECTORY (uncomment the one you like)
 ## There are four separate .csv files in this folder
-wd = "C://Users/Anusha/Documents/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Excel_CSV_versionsVegetation_Structure_data/"
+wd = "C://Users/Anusha/Documents/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Excel_CSV_versions/Vegetation_Structure_data/"
 #wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Excel_CSV_versions/Vegetation_Structure_data/"
 setwd(wd)
 
@@ -35,4 +35,18 @@ cc_site
 # Densitometry by site
 densitometry_site <- ggplot(canopy, aes(x=Site, y=Percent_densitometry)) + geom_boxplot()
 densitometry_site
+
+# Plot tree height by genus
+tree_genus_height <- ggplot(tree, aes(x=Genus, y=Height_m)) + geom_boxplot() + 
+                              theme(axis.text.x=element_text(angle=90, vjust=0))
+tree_genus_height
+
+# Plot canopy radius by genus
+tree_genus_canopy <-  ggplot(tree, aes(x=Genus, y=Canopy_radius_m)) + geom_boxplot() +
+                              theme(axis.text.x=element_text(angle=90, vjust=0))
+tree_genus_canopy
+
+# Plot dbh class by genus
+tree_genus_dbh <- ggplot(tree, aes(x=Genus, y=DBH_class)) + geom_point() + coord_flip() + facet_grid(~Site)
+tree_genus_dbh
 
