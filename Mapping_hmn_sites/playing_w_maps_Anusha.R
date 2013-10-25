@@ -9,14 +9,12 @@ library(scales)
 library(RgoogleMaps)
 library(ggplot2)
 library(ggmap)
-library(rtiff)
 
 wd = "C://Users/Anusha/Documents/Dropbox/NASA_Anusha/"
 # wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/NASA_Anusha/"
 setwd(wd)
 
-## I've saved the dms file with the corrected values as a new csv, so we don't have to run the convert()
-## code again. Leaving the function in just in case, minimized
+## I've saved the dmsdd file with the corrected values as a new csv, so we don't have to run the convert() code
 hmn <- read.csv("dmsdd_corrected.csv", sep = ",", header = T)
 
 #################### MAKE SWEET MAPS ########
