@@ -24,8 +24,8 @@ shrubs <- read.csv("shrubs.csv")
 m_canopy <- melt(data=canopy, id.vars="Site", measure.vars=c("percent_canopy_cover", 
                    "percent_subcanopy_cover", "percent_branches_without_leaves"), na.rm=T)
 
-## Not working! Need to fix blanks FIXME
-treedescrip <- melt(data=trees, id.vars="Point", measure.vars=c("Genus", "Height", "DBH_class"), na.rm=T)
+## FIXED. Sarah- the height column was not named right. fixed now.
+treedescrip <- melt(data=trees, id.vars="Point", measure.vars=c("Genus", "Height_m", "DBH_class", "Canopy_radius_m"), na.rm=T)
 
 ## Plots
 # Canopy cover by site
