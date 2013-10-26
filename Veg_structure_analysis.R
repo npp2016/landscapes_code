@@ -23,6 +23,7 @@ shrubs <- read.csv("shrubs.csv")
 ##-------- Cleaning and aggregating data
 
 # melt canopy data using Site as id.vars
+# TODO need to figure out how to scale this. Maybe divide each percent_... value by desitometry/100 or soemthing?
 m_canopy <- melt(data=canopy, id.vars="Site", measure.vars=c("percent_canopy_cover", 
         "Percent_densitometry", "percent_subcanopy_cover", 
         "percent_branches_without_leaves"), na.rm=T)
@@ -59,5 +60,3 @@ tree_genus_canopy
 tree_genus_dbh <- ggplot(trees, aes(x=Genus, y=DBH_class)) + geom_point() + theme_bw() +
   coord_flip() + facet_grid(~Site)
 tree_genus_dbh
-
-
