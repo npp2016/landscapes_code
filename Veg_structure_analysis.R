@@ -29,13 +29,13 @@ m_canopy <- melt(data=canopy, id.vars="Site", measure.vars=c("percent_canopy_cov
         "percent_branches_without_leaves"), na.rm=T)
 
 #reshape trees data for values per point and genus for each of the three tree variables
-m_trees <- melt(data=trees, id.vars=c("Point", "Genus"), 
+m_trees <- melt(data=trees, id.vars=c("Site", "Point", "Genus"), 
                     measure.vars=c("Height_m", "DBH_class", "Canopy_radius_m"), na.rm=T)
 
-#FIXME
 # melt shrubs data 
-m_shrubs <- melt(shrubs, id.vars="Site", measure.vars=c("Genus", "shrubs_0to0.5m", 
-                     "shrubs_0.5to1m", "shrubs_1to2m", "shrubs_2to3m", "shrubs_3plus_m"), na.rm=T)
+m_shrubs <- melt(shrubs, id.vars=c("Site", "Point", "Genus"), 
+                 measure.vars=c("shrubs_0to0.5m", "shrubs_0.5to1m", "shrubs_1to2m", "shrubs_2to3m", "shrubs_3plus_m"), na.rm=T)
+names(m_shrubs) <- c("Site", "Point", "Genus", "size_class", "num_indivs")
 
 ##--------- Plots
 
