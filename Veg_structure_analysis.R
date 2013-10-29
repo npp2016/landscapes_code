@@ -49,10 +49,12 @@ m_ground <- melt(data=cover, id.vars=c("Site", "Point"),
                                 "percent_soil_groundcover", "percent_rock_groundcover", "percent_organic_material_groundcover",
                                 "percent_water_groundcover", "percent_disturbance_groundcover"), na.rm=T)
 
+#FIXME: this code works, but is it necessary for the task?
 #reshape trees data for values per point and genus for each of the three tree variables
 m_trees <- melt(data=trees, id.vars=c("Site", "Point", "Genus"), 
                     measure.vars=c("Height_m", "DBH_class", "Canopy_radius_m"), na.rm=T)
 
+#FIXME: this code works, but is it necessary for the task?
 # melt shrubs data 
 m_shrubs <- melt(shrubs, id.vars=c("Site", "Point", "Genus"), 
                  measure.vars=c("shrubs_0to0.5m", "shrubs_0.5to1m", "shrubs_1to2m", "shrubs_2to3m", "shrubs_3plus_m"), na.rm=T)
@@ -82,3 +84,6 @@ tree_genus_canopy
 tree_genus_dbh <- ggplot(trees, aes(x=Genus, y=DBH_class)) + geom_point() + theme_bw() +
   coord_flip() + facet_grid(~Site)
 tree_genus_dbh
+
+# Plot tree height by site
+tree_site_height <- ggplot(trees)
