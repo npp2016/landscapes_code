@@ -28,11 +28,12 @@ m_canopy <- melt(data=canopy, id.vars="Site", measure.vars=c("percent_canopy_cov
         "Percent_densitometry", "percent_subcanopy_cover", 
         "percent_branches_without_leaves"), na.rm=T)
 
-# FIXED. @ Sarah- the height column was not named right. fixed now.
-m_trees <- melt(data=trees, id.vars="Point", 
-                    measure.vars=c("Genus", "Height_m", "DBH_class", "Canopy_radius_m"), na.rm=T)
+#reshape trees data for values per point and genus for each of the three tree variables
+m_trees <- melt(data=trees, id.vars=c("Point", "Genus"), 
+                    measure.vars=c("Height_m", "DBH_class", "Canopy_radius_m"), na.rm=T)
 
-# melt shrubs data
+#FIXME
+# melt shrubs data 
 m_shrubs <- melt(shrubs, id.vars="Site", measure.vars=c("Genus", "shrubs_0to0.5m", 
                      "shrubs_0.5to1m", "shrubs_1to2m", "shrubs_2to3m", "shrubs_3plus_m"), na.rm=T)
 
