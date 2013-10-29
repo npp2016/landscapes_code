@@ -24,9 +24,24 @@ shrubs <- read.csv("shrubs.csv")
 
 # melt canopy data using Site as id.vars
 # TODO need to figure out how to scale this. Maybe divide each percent_... value by desitometry/100 or soemthing?
-m_canopy <- melt(data=canopy, id.vars="Site", measure.vars=c("percent_canopy_cover", 
+m_canopy <- melt(data=canopy, id.vars=c("Site", "Point"), measure.vars=c("percent_canopy_cover", 
         "Percent_densitometry", "percent_subcanopy_cover", 
         "percent_branches_without_leaves"), na.rm=T)
+
+#dataframe with ground cover data only
+ground = canopy[,c(1,2,3,4,5,6,7,8,9,14,15,16,17,18,19,20,21)]
+ground[,c(10:17)] = ground[,c(10:17)]/100
+  names(ground) = c("Day", "Month", "Year", "Site", "Transect", "Point", "Observer", "Direction", "Distance", 
+                    "shrub", "forb", "grass", "soil", "rock", "organicmaterial", "water", "disturbance")
+
+# melt ground cover data
+#FIXME -- Now I'm not sure melt is the right way to deal with this data 
+# at each point, variables are taken at 9-17 locations away from the center.
+# total set of variables should sum to 1
+m_ground <- melt(data=canopy, id.vars=c("Site", "Point"), 
+                 measure.vars=c("percent_shrub_groundcover", "percent_forb_groundcover", "percent_grass_groundcover",
+                                "percent_soil_groundcover", "percent_rock_groundcover", "percent_organic_material_groundcover",
+                                "percent_water_groundcover", "percent_disturbance_groundcover"), na.rm=T)
 
 #reshape trees data for values per point and genus for each of the three tree variables
 m_trees <- melt(data=trees, id.vars=c("Site", "Point", "Genus"), 
