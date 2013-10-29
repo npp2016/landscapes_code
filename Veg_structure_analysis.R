@@ -49,12 +49,10 @@ m_ground <- melt(data=cover, id.vars=c("Site", "Point"),
                                 "percent_soil_groundcover", "percent_rock_groundcover", "percent_organic_material_groundcover",
                                 "percent_water_groundcover", "percent_disturbance_groundcover"), na.rm=T)
 
-#FIXME: this code works, but is it necessary for the task?
 #reshape trees data for values per point and genus for each of the three tree variables
 m_trees <- melt(data=trees, id.vars=c("Site", "Point", "Genus"), 
                     measure.vars=c("Height_m", "DBH_class", "Canopy_radius_m"), na.rm=T)
 
-#FIXME: this code works, but is it necessary for the task?
 # melt shrubs data 
 m_shrubs <- melt(shrubs, id.vars=c("Site", "Point", "Genus"), 
                  measure.vars=c("shrubs_0to0.5m", "shrubs_0.5to1m", "shrubs_1to2m", "shrubs_2to3m", "shrubs_3plus_m"), na.rm=T)
@@ -63,7 +61,7 @@ names(m_shrubs) <- c("Site", "Point", "Genus", "size_class", "num_indivs")
 ##--------- Plots
 
 # Canopy cover by site - useful
-cc_site <- ggplot(m_canopy, aes(x=Site, fill=variable)) + geom_bar() + theme_bw
+cc_site <- ggplot(m_canopy, aes(x=Site, fill=variable)) + geom_bar()
 cc_site
 
 # Densitometry by site
@@ -85,5 +83,15 @@ tree_genus_dbh <- ggplot(trees, aes(x=Genus, y=DBH_class)) + geom_point() + them
   coord_flip() + facet_grid(~Site)
 tree_genus_dbh
 
+##### LOOKING FOR DIFFERENCES AMONG THE TWO SITES
 # Plot tree height by site
-tree_site_height <- ggplot(trees)
+tree_site_height <- ggplot(trees, aes(x=Site, y=Height_m, fill=Site)) + geom_boxplot() + theme_bw()
+tree_site_height
+
+#Plot tree canopy radius by site
+tree_site_canopy <- ggplot(trees, aes(x=Site, y=Canopy_radius_m, fill=Site)) + geom_boxplot() + theme_bw()
+tree_site_canopy
+
+#Plot DBH class by site
+tree_site_dbh <- ggplot(subset(m_trees, variable=="DBH_class"), aes(Site, fill=factor(value))) + geom_bar(width=0.5)
+tree_site_dbh
