@@ -54,9 +54,12 @@ m_trees <- melt(data=trees, id.vars=c("Site", "Point", "Genus"),
                     measure.vars=c("Height_m", "DBH_class", "Canopy_radius_m"), na.rm=T)
 
 # melt shrubs data 
-m_shrubs <- melt(shrubs, id.vars=c("Site", "Point", "Genus"), 
+m_shrubs <- melt(shrubs, id.vars=c("Site", "Genus", "Point"), 
                  measure.vars=c("shrubs_0to0.5m", "shrubs_0.5to1m", "shrubs_1to2m", "shrubs_2to3m", "shrubs_3plus_m"), na.rm=T)
-names(m_shrubs) <- c("Site", "Point", "Genus", "size_class", "num_indivs")
+names(m_shrubs) <- c("Site", "Genus", "Point", "size_class", "num_indivs")
+
+#FIXME: Why counting HC twice? Is there an extra space in some site names?
+shb <- aggregate(num_indivs ~ Site + size_class, data = m_shrubs, FUN = sum)
 
 ##--------- Plots
 
@@ -95,3 +98,11 @@ tree_site_canopy
 #Plot DBH class by site
 tree_site_dbh <- ggplot(subset(m_trees, variable=="DBH_class"), aes(Site, fill=factor(value))) + geom_bar(width=0.5)
 tree_site_dbh
+
+#Plot shrub size by site
+shrub_site_size <- ggplot(shb, aes(x=size_class, weight=num_indivs, fill = Site)) + geom_bar() + facet_wrap(~ Site) +
+   theme_bw() + theme(axis.text.x=element_text(angle=60, vjust=0)) 
+shrub_site_size
+
+
+
