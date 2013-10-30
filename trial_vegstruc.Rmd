@@ -1,0 +1,13 @@
+```{r, echo=FALSE, results='hide'}
+## source('Users/sarah/Documents/GitHub/landscapes_code/Veg_structure_analysis.R')
+source('C://Users/anusha/Documents/GitHub/landscapes_code/Veg_structure_analysis.R')
+```
+
+**Title:** Preliminary figures and results from the Hummingbird Monitoring Network Vegetation structure data
+========================================================
+**Code & Analysis** 
+--------------------------------------
+Sarah R. Supp, Anusha Shankar, Tina Cormier
+
+**Results**
+------------------
