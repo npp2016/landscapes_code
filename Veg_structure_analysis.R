@@ -1,6 +1,6 @@
 # This code is to run exploratory analyses on observational data 
 # from the Summer 2013 field study in Patagonia, AZ
-# This code deals with the vegetation structure data. Student to contact for data questions: Marisa
+# This code deals with the vegetation structure data. Contact for data questions: Marisa
 # Code developed by: Anusha Shankar, Sarah Supp, and Catherine Graham
 
 ## Load packages
@@ -25,7 +25,9 @@ shrubs <- read.csv("shrubs.csv")
 #dataframe with canopy cover data only
 canopy = cover[,1:13]
 canopy[,c(10:13)] = canopy[,c(10:13)]/100
-  names(ground) = c("Day", "Month", "Year", "Site", "Transect", "Point", "Observer", "Direction", "Distance", 
+
+## @ Sarah - shouldn't this be names(canopy) ? It was names(ground)
+  names(canopy) = c("Day", "Month", "Year", "Site", "Transect", "Point", "Observer", "Direction", "Distance", 
                     "densitometry","canopy", "subcanopy", "barebranches")
 
 # dataframe with ground cover only
@@ -35,7 +37,7 @@ names(ground) = c("Day", "Month", "Year", "Site", "Transect", "Point", "Observer
                   "shrub", "forb", "grass", "soil", "rock", "organicmaterial", "water", "disturbance")
 
 # melt canopy data using Site as id.vars
-# TODO need to figure out how to scale this. Maybe divide each percent_... value by desitometry/100 or soemthing?
+# TODO need to figure out how to scale this. Maybe divide each percent_... value by densitometry/100 or something?
 m_canopy <- melt(data=cover, id.vars=c("Site", "Point"), measure.vars=c("percent_canopy_cover", 
                                                                          "Percent_densitometry", "percent_subcanopy_cover", 
                                                                          "percent_branches_without_leaves"), na.rm=T)
@@ -58,7 +60,9 @@ m_shrubs <- melt(shrubs, id.vars=c("Site", "Genus", "Point"),
                  measure.vars=c("shrubs_0to0.5m", "shrubs_0.5to1m", "shrubs_1to2m", "shrubs_2to3m", "shrubs_3plus_m"), na.rm=T)
 names(m_shrubs) <- c("Site", "Genus", "Point", "size_class", "num_indivs")
 
-#FIXME: Why counting HC twice? Is there an extra space in some site names?
+#FIXED: Why counting HC twice? Is there an extra space in some site names?
+## AS: Yes, there was a space in a few entries, I thought removed and fixed it in all of them, 
+## but I had left the shrubs dataset out. Seems to work now.
 shb <- aggregate(num_indivs ~ Site + size_class, data = m_shrubs, FUN = sum)
 
 ##--------- Plots
