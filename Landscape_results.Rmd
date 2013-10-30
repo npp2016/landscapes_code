@@ -1,5 +1,7 @@
 ```{r, echo=FALSE, results='hide'}
-source('/Users/sarah/Documents/GitHub/landscapes_code/Pointcount_focalobservations.r')
+# Comment out the one you don't want
+source('Users/sarah/Documents/GitHub/landscapes_code/Pointcount_focalobservations.r')
+# source('C://Users/anusha/Documents/GitHub/landscapes_code/Pointcount_focalobservations.r'))
 ```
 
 **Title:** Preliminary figures and results from the Hummingbird Monitoring Network landscapes data
