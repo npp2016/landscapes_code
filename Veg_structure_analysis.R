@@ -27,8 +27,12 @@ canopy = cover[,1:13]
 canopy[,c(10:13)] = canopy[,c(10:13)]/100
 
 ## @ Sarah - shouldn't this be names(canopy) ? It was names(ground)
-  names(canopy) = c("Day", "Month", "Year", "Site", "Transect", "Point", "Observer", "Direction", "Distance", 
+names(canopy) = c("Day", "Month", "Year", "Site", "Transect", "Point", "Observer", "Direction", "Distance", 
                     "densitometry","canopy", "subcanopy", "barebranches")
+
+# Renaming shrubs variables
+names(shrubs) <- c("Date", "Site", "Transect", "Point", "Observer", "Genus", "num_indivs", "Type", "Direction",
+                   "0to0.5m", "0.5to1m", "1to2m", "2to3m", "3plusm")
 
 # dataframe with ground cover only
 ground = cover[,c(1,2,3,4,5,6,7,8,9,14,15,16,17,18,19,20,21)]
@@ -57,7 +61,7 @@ m_trees <- melt(data=trees, id.vars=c("Site", "Point", "Genus"),
 
 # melt shrubs data 
 m_shrubs <- melt(shrubs, id.vars=c("Site", "Genus", "Point"), 
-                 measure.vars=c("shrubs_0to0.5m", "shrubs_0.5to1m", "shrubs_1to2m", "shrubs_2to3m", "shrubs_3plus_m"), na.rm=T)
+                 measure.vars=c("0to0.5m", "0.5to1m", "1to2m", "2to3m", "3plusm"), na.rm=T)
 names(m_shrubs) <- c("Site", "Genus", "Point", "size_class", "num_indivs")
 
 #FIXED: Why counting HC twice? Is there an extra space in some site names?
@@ -67,7 +71,7 @@ shb <- aggregate(num_indivs ~ Site + size_class, data = m_shrubs, FUN = sum)
 
 ##--------- Plots
 
-# Canopy cover by site - useful
+# Canopy cover by site - useful. But need to scale somehow
 cc_site <- ggplot(m_canopy, aes(x=Site, fill=variable)) + geom_bar()
 cc_site
 
@@ -104,9 +108,7 @@ tree_site_dbh <- ggplot(subset(m_trees, variable=="DBH_class"), aes(Site, fill=f
 tree_site_dbh
 
 #Plot shrub size by site
+#--- AS: Question: Is the fill=Site necessary? Or is it just a nice visual?
 shrub_site_size <- ggplot(shb, aes(x=size_class, weight=num_indivs, fill = Site)) + geom_bar() + facet_wrap(~ Site) +
-   theme_bw() + theme(axis.text.x=element_text(angle=60, vjust=0)) 
+   theme_bw() + theme(axis.text.x=element_text(angle=60, vjust=0.5)) 
 shrub_site_size
-
-
-
