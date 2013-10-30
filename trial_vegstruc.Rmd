@@ -11,3 +11,4 @@ Sarah R. Supp, Anusha Shankar, Tina Cormier
 
 **Results**
 ------------------
+We split the vegetation structure dataset into its multiple components: Trees, shrubs, canopy, and ground cover. Observations took place 8 July to 16 July, 2013.
