@@ -102,10 +102,12 @@ tree_site_canopy <- ggplot(trees, aes(x=Site, y=Canopy_radius_m, fill=Site)) + g
 tree_site_canopy
 
 #Plot DBH class by site
+## TODO Try to do relative abundance
 tree_site_dbh <- ggplot(subset(m_trees, variable=="DBH_class"), aes(Site, fill=factor(value))) + geom_bar(width=0.5)
 tree_site_dbh
 
 #Plot shrub size by site
+## TODO Try to do relative abundance
 shrub_site_size <- ggplot(shb, aes(x=size_class, weight=num_indivs, fill = Site)) + geom_bar() + facet_wrap(~ Site) +
    theme_bw() + theme(axis.text.x=element_text(angle=60, vjust=0.5)) 
 shrub_site_size
