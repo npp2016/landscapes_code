@@ -67,9 +67,7 @@ m_shrubs <- melt(shrubs, id.vars=c("Site", "Genus", "Point"),
                  measure.vars=c("0to0.5m", "0.5to1m", "1to2m", "2to3m", "3plusm"), na.rm=T)
 names(m_shrubs) <- c("Site", "Genus", "Point", "size_class", "num_indivs")
 
-#FIXED: Why counting HC twice? Is there an extra space in some site names?
-## AS: Yes, there was a space in a few entries, I thought removed and fixed it in all of them, 
-## but I had left the shrubs dataset out. Seems to work now.
+#aggregate shrub data by site and size class
 shb <- aggregate(num_indivs ~ Site + size_class, data = m_shrubs, FUN = sum)
 
 ##--------- Plots
@@ -113,6 +111,8 @@ tree_site_dbh
 
 #Plot shrub size by site
 #--- AS: Question: Is the fill=Site necessary? Or is it just a nice visual?
+#--- SS: Answer: My thought is that for this, you can scan a document and visually
+#                see that all red plots are HC and all blue stuff goes with PL (it's not necessary, per se)
 shrub_site_size <- ggplot(shb, aes(x=size_class, weight=num_indivs, fill = Site)) + geom_bar() + facet_wrap(~ Site) +
    theme_bw() + theme(axis.text.x=element_text(angle=60, vjust=0.5)) 
 shrub_site_size
