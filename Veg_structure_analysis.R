@@ -110,9 +110,6 @@ tree_site_dbh <- ggplot(subset(m_trees, variable=="DBH_class"), aes(Site, fill=f
 tree_site_dbh
 
 #Plot shrub size by site
-#--- AS: Question: Is the fill=Site necessary? Or is it just a nice visual?
-#--- SS: Answer: My thought is that for this, you can scan a document and visually
-#                see that all red plots are HC and all blue stuff goes with PL (it's not necessary, per se)
 shrub_site_size <- ggplot(shb, aes(x=size_class, weight=num_indivs, fill = Site)) + geom_bar() + facet_wrap(~ Site) +
    theme_bw() + theme(axis.text.x=element_text(angle=60, vjust=0.5)) 
 shrub_site_size
