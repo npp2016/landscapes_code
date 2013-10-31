@@ -11,4 +11,11 @@ Sarah R. Supp, Anusha Shankar, Tina Cormier
 
 **Results**
 ------------------
-We split the vegetation structure dataset into its multiple components: Trees, shrubs, canopy, and ground cover. Observations took place 8 July to 16 July, 2013.
+We split the vegetation structure dataset into its multiple components: Trees, shrubs, canopy, and ground cover. Data were collected between 8 July, 2013 and 16 July, 2013. Here we compare canopy cover, ground cover, shrub sizes and species, and tree sizes and species across and between sites.
+
+**Figure 1** Canopy cover by site. There were `r richnesssite[1,2]` 
+
+```{r fig.width=3, fig.height=4, echo=FALSE}
+cc_site
+```
+
