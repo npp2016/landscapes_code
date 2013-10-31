@@ -49,10 +49,6 @@ m_canopy <- melt(data=cover, id.vars=c("Site", "Point"), measure.vars=c("percent
 #FIXME -- Now I'm not sure melt is the right way to deal with this data 
 # at each point, variables are taken at 9-17 locations away from the center.
 # total set of variables should sum to 1
-## AS: So, there is one set of measurements at 15m, in different directions
-# And another set at 30m in different directions. I think we find an average of each 
-# canopy_...value across directions at the same distance. Then we facet by distance, 
-# and plot either stacked or separate plots of cover. Not sure how to execute melt() yet.
 m_ground <- melt(data=cover, id.vars=c("Site", "Point"), 
                  measure.vars=c("percent_shrub_groundcover", "percent_forb_groundcover", "percent_grass_groundcover",
                                 "percent_soil_groundcover", "percent_rock_groundcover", "percent_organic_material_groundcover",
