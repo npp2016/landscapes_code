@@ -25,8 +25,7 @@ shrubs <- read.csv("shrubs.csv")
 #dataframe with canopy cover data only
 canopy = cover[,1:13]
 canopy[,c(10:13)] = canopy[,c(10:13)]/100
-
-## @ Sarah - shouldn't this be names(canopy) ? It was names(ground)
+## @ Sarah - This should stay as names(canopy) right? It was names(ground)
 names(canopy) = c("Day", "Month", "Year", "Site", "Transect", "Point", "Observer", "Direction", "Distance", 
                     "densitometry","canopy", "subcanopy", "barebranches")
 
@@ -50,6 +49,10 @@ m_canopy <- melt(data=cover, id.vars=c("Site", "Point"), measure.vars=c("percent
 #FIXME -- Now I'm not sure melt is the right way to deal with this data 
 # at each point, variables are taken at 9-17 locations away from the center.
 # total set of variables should sum to 1
+## AS: So, there is one set of measurements at 15m, in different directions
+# And another set at 30m in different directions. I think we find an average of each 
+# canopy_...value across directions at the same distance. Then we facet by distance, 
+# and plot either stacked or separate plots of cover. Not sure how to execute melt() yet.
 m_ground <- melt(data=cover, id.vars=c("Site", "Point"), 
                  measure.vars=c("percent_shrub_groundcover", "percent_forb_groundcover", "percent_grass_groundcover",
                                 "percent_soil_groundcover", "percent_rock_groundcover", "percent_organic_material_groundcover",
@@ -71,8 +74,9 @@ shb <- aggregate(num_indivs ~ Site + size_class, data = m_shrubs, FUN = sum)
 
 ##--------- Plots
 
-# Canopy cover by site - useful. But need to scale somehow
-cc_site <- ggplot(m_canopy, aes(x=Site, fill=variable)) + geom_bar()
+# Canopy cover by site - useful. Removed densitometry. Not sure if this is enough or it still needs scaling
+cc_site <- ggplot(m_canopy[!m_canopy$variable%in% "Percent_densitometry",],
+                  aes(x=Site, fill=variable)) + geom_bar()
 cc_site
 
 # Densitometry by site
