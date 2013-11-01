@@ -8,7 +8,7 @@ library(ggplot2)
 library(reshape)
 
 ##### CHOOSE WORKING DIRECTORY (uncomment the one you like)
-## There are five separate .csv files in this folder
+## There are multiple .csv files in this folder
 wd = "C://Users/Anusha/Documents/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Excel_CSV_versions/Vegetation_Structure_data/"
 #wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Excel_CSV_versions/Vegetation_Structure_data/"
 setwd(wd)
@@ -28,6 +28,7 @@ names(shrubs) <- c("Date", "Site", "Transect", "Point", "Observer", "Genus", "nu
                    "0to0.5m", "0.5to1m", "1to2m", "2to3m", "3plusm")
 
 #### Loop to sum canopy, subcanopy, and branches data ####
+# TODO Still have to do some dividing.
 canopy$pointsum <- 0
 canopy$pointsum[1] <- 1
 canopy$canopy_sum <- 0
@@ -56,8 +57,6 @@ for (i in 2:length(canopy$Number)) {
 m_canopy <- melt(data=canopy, id.vars=c("Site", "Point"), measure.vars=c("canopy", 
                                                                          "densitometry", "subcanopy", 
                                                                          "barebranches"), na.rm=T)
-
-
 
 # melt ground cover data
 m_ground <- melt(data=cover, id.vars=c("Site", "Point"), 
