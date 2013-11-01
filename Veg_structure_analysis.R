@@ -14,41 +14,25 @@ wd = "C://Users/Anusha/Documents/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/F
 setwd(wd)
 
 ## Read in csv files
-cover <- read.csv("CanopyAndGroundCover.csv")
+canopy <- read.csv("Canopy.csv")
 siteveg_descrip <- read.csv("SiteVegetationDescriptors.csv")
 genus_key <- read.csv("GenusKey.csv")
 trees <- read.csv("trees.csv")
 shrubs <- read.csv("shrubs.csv")
+ground <- read.csv("Groundcover.csv")
 
 ##-------- Cleaning and aggregating data
-
-#dataframe with canopy cover data only
-canopy = cover[,1:13]
-canopy[,c(10:13)] = canopy[,c(10:13)]/100
-## @ Sarah - This should stay as names(canopy) right? It was names(ground)
-names(canopy) = c("Day", "Month", "Year", "Site", "Transect", "Point", "Observer", "Direction", "Distance", 
-                    "densitometry","canopy", "subcanopy", "barebranches")
 
 # Renaming shrubs variables
 names(shrubs) <- c("Date", "Site", "Transect", "Point", "Observer", "Genus", "num_indivs", "Type", "Direction",
                    "0to0.5m", "0.5to1m", "1to2m", "2to3m", "3plusm")
 
-# dataframe with ground cover only
-ground = cover[,c(1,2,3,4,5,6,7,8,9,14,15,16,17,18,19,20,21)]
-ground[,c(10:17)] = ground[,c(10:17)]/100
-names(ground) = c("Day", "Month", "Year", "Site", "Transect", "Point", "Observer", "Direction", "Distance", 
-                  "shrub", "forb", "grass", "soil", "rock", "organicmaterial", "water", "disturbance")
-
 # melt canopy data using Site as id.vars
-# TODO need to figure out how to scale this. Maybe divide each percent_... value by densitometry/100 or something?
-m_canopy <- melt(data=cover, id.vars=c("Site", "Point"), measure.vars=c("percent_canopy_cover", 
-                                                                         "Percent_densitometry", "percent_subcanopy_cover", 
-                                                                         "percent_branches_without_leaves"), na.rm=T)
+m_canopy <- melt(data=canopy, id.vars=c("Site", "Point"), measure.vars=c("canopy", 
+                                                                         "densitometry", "subcanopy", 
+                                                                         "barebranches"), na.rm=T)
 
 # melt ground cover data
-#FIXME -- Now I'm not sure melt is the right way to deal with this data 
-# at each point, variables are taken at 9-17 locations away from the center.
-# total set of variables should sum to 1
 m_ground <- melt(data=cover, id.vars=c("Site", "Point"), 
                  measure.vars=c("percent_shrub_groundcover", "percent_forb_groundcover", "percent_grass_groundcover",
                                 "percent_soil_groundcover", "percent_rock_groundcover", "percent_organic_material_groundcover",
@@ -68,13 +52,18 @@ shb <- aggregate(num_indivs ~ Site + size_class, data = m_shrubs, FUN = sum)
 
 ##--------- Plots
 
-# Canopy cover by site - useful. Removed densitometry. Not sure if this is enough or it still needs scaling
-cc_site <- ggplot(m_canopy[!m_canopy$variable%in% "Percent_densitometry",],
+# Canopy cover by site - useful.
+cc_site <- ggplot(m_canopy[!m_canopy$variable%in% "densitometry",],
                   aes(x=Site, fill=variable)) + geom_bar()
 cc_site
 
+# Ground cover by site
+ground_site <- ggplot(m_ground,#[!m_ground$variable%in% "densitometry",],
+                  aes(x=Site, fill=variable)) + geom_bar()
+ground_site
+
 # Densitometry by site
-densitometry_site <- ggplot(cover, aes(x=Site, y=Percent_densitometry)) + geom_boxplot() + theme_bw()
+densitometry_site <- ggplot(canopy, aes(x=Site, y=densitometry)) + geom_boxplot() + theme_bw()
 densitometry_site
 
 # Plot tree height by genus
