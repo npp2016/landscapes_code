@@ -31,7 +31,20 @@ names(shrubs) <- c("Date", "Site", "Transect", "Point", "Observer", "Genus", "nu
 m_canopy <- melt(data=canopy, id.vars=c("Site", "Point"), measure.vars=c("canopy", 
                                                                          "densitometry", "subcanopy", 
                                                                          "barebranches"), na.rm=T)
-
+canopy$pointsum <- 0
+canopy$canopy_sum <- 0
+canopy$pointsum[1] <- 1
+canopy$canopy_sum[1] <- canopy$canopy[1]
+for (i in 2:length(canopy$Number)) {
+  if (canopy$Point[i]==canopy$Point[i-1]) {
+    canopy$pointsum[i] <- (canopy$pointsum[i-1] + 1) 
+    canopy$canopy_sum[i] <- (canopy$canopy[i] + canopy$canopy_sum[i-1])
+  } else {
+    canopy$pointsum[i] <- 1
+    canopy$canopy_sum[i] <- canopy$canopy[i]
+  }
+}
+head(canopy)
 # melt ground cover data
 m_ground <- melt(data=cover, id.vars=c("Site", "Point"), 
                  measure.vars=c("percent_shrub_groundcover", "percent_forb_groundcover", "percent_grass_groundcover",
@@ -58,8 +71,7 @@ cc_site <- ggplot(m_canopy[!m_canopy$variable%in% "densitometry",],
 cc_site
 
 # Ground cover by site
-ground_site <- ggplot(m_ground,#[!m_ground$variable%in% "densitometry",],
-                  aes(x=Site, fill=variable)) + geom_bar()
+ground_site <- ggplot(m_ground, aes(x=Site, fill=variable)) + geom_bar()
 ground_site
 
 # Densitometry by site
