@@ -27,24 +27,38 @@ ground <- read.csv("Groundcover.csv")
 names(shrubs) <- c("Date", "Site", "Transect", "Point", "Observer", "Genus", "num_indivs", "Type", "Direction",
                    "0to0.5m", "0.5to1m", "1to2m", "2to3m", "3plusm")
 
-# melt canopy data using Site as id.vars
-m_canopy <- melt(data=canopy, id.vars=c("Site", "Point"), measure.vars=c("canopy", 
-                                                                         "densitometry", "subcanopy", 
-                                                                         "barebranches"), na.rm=T)
+#### Loop to sum canopy, subcanopy, and branches data ####
 canopy$pointsum <- 0
-canopy$canopy_sum <- 0
 canopy$pointsum[1] <- 1
+canopy$canopy_sum <- 0
 canopy$canopy_sum[1] <- canopy$canopy[1]
+canopy$subcanopy_sum <- 0
+canopy$subcanopy_sum[1] <- canopy$subcanopy[1]
+canopy$branches_sum <- 0
+canopy$branches_sum[1] <- canopy$barebranches[1]
 for (i in 2:length(canopy$Number)) {
   if (canopy$Point[i]==canopy$Point[i-1]) {
     canopy$pointsum[i] <- (canopy$pointsum[i-1] + 1) 
     canopy$canopy_sum[i] <- (canopy$canopy[i] + canopy$canopy_sum[i-1])
+    canopy$subcanopy_sum[i] <- (canopy$subcanopy[i] + canopy$subcanopy_sum[i-1])
+    canopy$branches_sum[i] <- (canopy$barebranches[i] + canopy$branches_sum[i-1])
   } else {
     canopy$pointsum[i] <- 1
     canopy$canopy_sum[i] <- canopy$canopy[i]
+    canopy$subcanopy_sum[i] <- canopy$subcanopy[i]
+    canopy$branches_sum[i] <- canopy$barebranches[i]
   }
 }
-head(canopy)
+
+
+#### Melt functions ####
+# melt canopy data using Site as id.vars
+m_canopy <- melt(data=canopy, id.vars=c("Site", "Point"), measure.vars=c("canopy", 
+                                                                         "densitometry", "subcanopy", 
+                                                                         "barebranches"), na.rm=T)
+
+
+
 # melt ground cover data
 m_ground <- melt(data=cover, id.vars=c("Site", "Point"), 
                  measure.vars=c("percent_shrub_groundcover", "percent_forb_groundcover", "percent_grass_groundcover",
