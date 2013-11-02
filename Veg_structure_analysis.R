@@ -9,8 +9,10 @@ library(reshape)
 
 ##### CHOOSE WORKING DIRECTORY (uncomment the one you like)
 ## There are multiple .csv files in this folder
-wd = "C://Users/Anusha/Documents/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Excel_CSV_versions/Vegetation_Structure_data/"
-#wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Excel_CSV_versions/Vegetation_Structure_data/"
+wd = "C://Users/Anusha/Documents/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/
+Final_Databases_2013/Excel_CSV_versions/Vegetation_Structure_data/"
+#wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/
+#Final_Databases_2013/Excel_CSV_versions/Vegetation_Structure_data/"
 setwd(wd)
 
 ## Read in csv files
@@ -24,8 +26,9 @@ ground <- read.csv("Groundcover.csv")
 ##-------- Cleaning and aggregating data
 
 # Renaming shrubs variables
-names(shrubs) <- c("Date", "Site", "Transect", "Point", "Observer", "Genus", "num_indivs", "Type", "Direction",
-                   "0to0.5m", "0.5to1m", "1to2m", "2to3m", "3plusm")
+names(shrubs) <- c("Date", "Site", "Transect", "Point", "Observer", "Genus", 
+                   "num_indivs", "Type", "Direction", "0to0.5m", "0.5to1m", "1to2m", 
+                   "2to3m", "3plusm")
 
 #### Loop to sum canopy, subcanopy, and branches data ####
 # TODO Still have to do some dividing.
@@ -51,18 +54,15 @@ for (i in 2:length(canopy$Number)) {
   }
 }
 
-
 #### Melt functions ####
 # melt canopy data using Site as id.vars
-m_canopy <- melt(data=canopy, id.vars=c("Site", "Point"), measure.vars=c("canopy", 
-                                                                         "densitometry", "subcanopy", 
-                                                                         "barebranches"), na.rm=T)
+m_canopy <- melt(data=canopy, id.vars=c("Site", "Point"), 
+                 measure.vars=c("canopy", "densitometry", "subcanopy", "barebranches"), na.rm=T)
 
 # melt ground cover data
-m_ground <- melt(data=cover, id.vars=c("Site", "Point"), 
-                 measure.vars=c("percent_shrub_groundcover", "percent_forb_groundcover", "percent_grass_groundcover",
-                                "percent_soil_groundcover", "percent_rock_groundcover", "percent_organic_material_groundcover",
-                                "percent_water_groundcover", "percent_disturbance_groundcover"), na.rm=T)
+m_ground <- melt(data=ground, id.vars=c("Site", "Point"), 
+                 measure.vars=c("shrub", "forb", "grass", "soil", "rock", 
+                                "organicmaterial", "water", "disturbance"), na.rm=T)
 
 #reshape trees data for values per point and genus for each of the three tree variables
 m_trees <- melt(data=trees, id.vars=c("Site", "Point", "Genus"), 
@@ -78,13 +78,24 @@ shb <- aggregate(num_indivs ~ Site + size_class, data = m_shrubs, FUN = sum)
 
 ##--------- Plots
 
-# Canopy cover by site - useful.
-cc_site <- ggplot(m_canopy[!m_canopy$variable%in% "densitometry",],
-                  aes(x=Site, fill=variable)) + geom_bar()
+## NOTE: I think there's something wrong with the fill geom_bar() plots- 
+## all the component bars look the same size beacuse we are not plotting the values
+## of the measurements, we were only plotting the number of measurements taken.
+## Have to think about what this is doing some more. I've plotted points, but this isn't
+## the best way to look at it for sure.
+
+# Canopy cover by site- original
+cc_site <- ggplot(m_canopy, aes(x=Site, fill=variable)) + geom_bar() + theme_bw()
 cc_site
 
+# Canopy cover by site - this is with points instead of bar, and including values
+cc_site_points <- ggplot(m_canopy, aes(x=variable, y=value, fill=variable)) + 
+  geom_boxplot() + facet_grid(~Site) + theme_bw()
+cc_site_points
+
 # Ground cover by site
-ground_site <- ggplot(m_ground, aes(x=Site, fill=variable)) + geom_bar()
+ground_site <- ggplot(m_ground, aes(x=variable, y=value, fill=variable)) + theme_bw()
+  geom_boxplot() + facet_grid(~Site) + theme(axis.text.x=element_text(angle=60, vjust=0.5))
 ground_site
 
 # Densitometry by site
@@ -102,26 +113,29 @@ tree_genus_canopy <-  ggplot(trees, aes(x=Genus, y=Canopy_radius_m)) + geom_boxp
 tree_genus_canopy
 
 # Plot dbh class by genus
-tree_genus_dbh <- ggplot(trees, aes(x=Genus, y=DBH_class)) + geom_point() + theme_bw() +
-  coord_flip() + facet_grid(~Site)
+tree_genus_dbh <- ggplot(trees, aes(x=Genus, y=DBH_class)) + geom_point(size=3, col="red") +
+  theme_bw() + coord_flip() + facet_grid(~Site)
 tree_genus_dbh
 
 ##### LOOKING FOR DIFFERENCES AMONG THE TWO SITES
 # Plot tree height by site
-tree_site_height <- ggplot(trees, aes(x=Site, y=Height_m, fill=Site)) + geom_boxplot() + theme_bw()
+tree_site_height <- ggplot(trees, aes(x=Site, y=Height_m, fill=Site)) + 
+  geom_boxplot() + theme_bw()
 tree_site_height
 
 #Plot tree canopy radius by site
-tree_site_canopy <- ggplot(trees, aes(x=Site, y=Canopy_radius_m, fill=Site)) + geom_boxplot() + theme_bw()
+tree_site_canopy <- ggplot(trees, aes(x=Site, y=Canopy_radius_m, fill=Site)) + 
+  geom_boxplot() + theme_bw()
 tree_site_canopy
 
 #Plot DBH class by site
 ## TODO Try to do relative abundance
-tree_site_dbh <- ggplot(subset(m_trees, variable=="DBH_class"), aes(Site, fill=factor(value))) + geom_bar(width=0.5)
+tree_site_dbh <- ggplot(subset(m_trees, variable=="DBH_class"), aes(Site, fill=factor(value))) +
+  geom_bar(width=0.5)
 tree_site_dbh
 
 #Plot shrub size by site
 ## TODO Try to do relative abundance
-shrub_site_size <- ggplot(shb, aes(x=size_class, weight=num_indivs, fill = Site)) + geom_bar() + facet_wrap(~ Site) +
-   theme_bw() + theme(axis.text.x=element_text(angle=60, vjust=0.5)) 
+shrub_site_size <- ggplot(shb, aes(x=size_class, weight=num_indivs, fill = Site)) + geom_bar() +
+  facet_wrap(~ Site) + theme_bw() + theme(axis.text.x=element_text(angle=60, vjust=0.5)) 
 shrub_site_size
