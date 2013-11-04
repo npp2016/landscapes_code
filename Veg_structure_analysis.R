@@ -9,10 +9,8 @@ library(reshape)
 
 ##### CHOOSE WORKING DIRECTORY (uncomment the one you like)
 ## There are multiple .csv files in this folder
-wd = "C://Users/Anusha/Documents/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/
-Final_Databases_2013/Excel_CSV_versions/Vegetation_Structure_data/"
-#wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/
-#Final_Databases_2013/Excel_CSV_versions/Vegetation_Structure_data/"
+wd = "C://Users/Anusha/Documents/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Excel_CSV_versions/Vegetation_Structure_data/"
+#wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/#Final_Databases_2013/Excel_CSV_versions/Vegetation_Structure_data/"
 setwd(wd)
 
 ## Read in csv files
@@ -27,8 +25,7 @@ ground <- read.csv("Groundcover.csv")
 
 # Renaming shrubs variables
 names(shrubs) <- c("Date", "Site", "Transect", "Point", "Observer", "Genus", 
-                   "num_indivs", "Type", "Direction", "0to0.5m", "0.5to1m", "1to2m", 
-                   "2to3m", "3plusm")
+                   "num_indivs", "Type", "Direction", "0to0.5m", "0.5to1m", "1to2m", "2to3m", "3plusm")
 
 #### Loop to sum canopy, subcanopy, and branches data ####
 # TODO Still have to do some dividing.
@@ -76,6 +73,8 @@ names(m_shrubs) <- c("Site", "Genus", "Point", "size_class", "num_indivs")
 #aggregate shrub data by site and size class
 shb <- aggregate(num_indivs ~ Site + size_class, data = m_shrubs, FUN = sum)
 
+
+
 ##--------- Plots
 
 ## NOTE: I think there's something wrong with the fill geom_bar() plots- 
@@ -84,23 +83,26 @@ shb <- aggregate(num_indivs ~ Site + size_class, data = m_shrubs, FUN = sum)
 ## Have to think about what this is doing some more. I've plotted points, but this isn't
 ## the best way to look at it for sure.
 
+# Densitometry by site
+densitometry_site <- ggplot(canopy, aes(x=Site, y=densitometry)) + geom_boxplot() + theme_bw()
+densitometry_site
+
 # Canopy cover by site- original
-cc_site <- ggplot(m_canopy, aes(x=Site, fill=variable)) + geom_bar() + theme_bw()
+cc_site <- ggplot(m_canopy[!m_canopy$variable %in% "densitometry",], 
+                  aes(x=Site, fill=variable)) + geom_bar() + theme_bw()
 cc_site
 
-# Canopy cover by site - this is with points instead of bar, and including values
-cc_site_points <- ggplot(m_canopy, aes(x=variable, y=value, fill=variable)) + 
-  geom_boxplot() + facet_grid(~Site) + theme_bw()
+# Canopy cover by site - this is with line, and including values. Is boxplot more useful?
+# Any way to include densitometry for comparison?
+cc_site_points <- ggplot(m_canopy[!m_canopy$variable %in% "densitometry",],
+                         aes(x=variable, y=value, fill=variable)) + geom_smooth(aes(group=1)) + 
+  theme_bw() + facet_grid(~Site)
 cc_site_points
 
 # Ground cover by site
 ground_site <- ggplot(m_ground, aes(x=variable, y=value, fill=variable)) + theme_bw()
   geom_boxplot() + facet_grid(~Site) + theme(axis.text.x=element_text(angle=60, vjust=0.5))
 ground_site
-
-# Densitometry by site
-densitometry_site <- ggplot(canopy, aes(x=Site, y=densitometry)) + geom_boxplot() + theme_bw()
-densitometry_site
 
 # Plot tree height by genus
 tree_genus_height <- ggplot(trees, aes(x=Genus, y=Height_m)) + geom_boxplot() + theme_bw() +
