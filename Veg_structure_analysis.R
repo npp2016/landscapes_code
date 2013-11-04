@@ -94,10 +94,16 @@ cc_site
 
 # Canopy cover by site - this is with line, and including values. Is boxplot more useful?
 # Any way to include densitometry for comparison?
-cc_site_points <- ggplot(m_canopy[!m_canopy$variable %in% "densitometry",],
+cc_site_line <- ggplot(m_canopy[!m_canopy$variable %in% "densitometry",],
                          aes(x=variable, y=value, fill=variable)) + geom_smooth(aes(group=1)) + 
   theme_bw() + facet_grid(~Site)
-cc_site_points
+cc_site_line
+
+# Canopy cover by site- boxplot
+cc_site_box <- ggplot(m_canopy[!m_canopy$variable %in% "densitometry",],
+                       aes(x=variable, y=value, fill=variable)) + geom_boxplot() + theme_bw() + facet_grid(~Site)
+cc_site_box
+
 
 # Ground cover by site
 ground_site <- ggplot(m_ground, aes(x=variable, y=value, fill=variable)) + theme_bw()
