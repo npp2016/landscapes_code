@@ -101,21 +101,21 @@ cc_site_line
 
 # Canopy cover by site- boxplot
 cc_site_box <- ggplot(m_canopy[!m_canopy$variable %in% "densitometry",],
-                       aes(x=variable, y=value, fill=variable)) + geom_boxplot() + theme_bw() + facet_grid(~Site)
+                       aes(x=variable, y=value, fill=variable)) + facet_grid(~Site) + geom_boxplot() + 
+  theme_bw() + theme(axis.text.x=element_text(angle=60, vjust=0.5))
 cc_site_box
 
-
 # Ground cover by site
-ground_site <- ggplot(m_ground, aes(x=variable, y=value, fill=variable)) + theme_bw()
-  geom_boxplot() + facet_grid(~Site) + theme(axis.text.x=element_text(angle=60, vjust=0.5))
+ground_site <- ggplot(m_ground, aes(x=variable, y=value, fill=variable)) + theme_bw() +
+  geom_boxplot() + facet_grid(~Site) + theme(axis.text.x=element_text(angle=90, vjust=0.5))
 ground_site
 
 # Plot tree height by genus
-tree_genus_height <- ggplot(trees, aes(x=Genus, y=Height_m)) + geom_boxplot() + theme_bw() +
-                              theme(axis.text.x=element_text(angle=90, vjust=0))
+tree_genus_height <- ggplot(trees, aes(x=Genus, y=Height_m)) + geom_boxplot() + theme_bw() + facet_grid(~Site) +
+                           theme(axis.text.x=element_text(angle=90, vjust=0))
 tree_genus_height
 
-# Plot canopy radius by genus
+# Plot canopy radius by genus. ######### Is this useful??
 tree_genus_canopy <-  ggplot(trees, aes(x=Genus, y=Canopy_radius_m)) + geom_boxplot() +
                     theme_bw() + theme(axis.text.x=element_text(angle=90, vjust=0))
 tree_genus_canopy

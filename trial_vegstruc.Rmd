@@ -13,9 +13,73 @@ Sarah R. Supp, Anusha Shankar, Tina Cormier
 ------------------
 We split the vegetation structure dataset into its multiple components: Trees, shrubs, canopy, and ground cover. Data were collected between 8 July, 2013 and 16 July, 2013. Here we compare canopy cover, ground cover, shrub sizes and species, and tree sizes and species across and between sites.
 
-**Figure 1** Canopy cover by site. There were `r richnesssite[1,2]` 
+**Descriptive graphs**
+-------------------
+
+**Figure 1** Densitometry by site. This refers to total proportion of sky covered by canopy + subcanopy + bare branches.
 
 ```{r fig.width=3, fig.height=4, echo=FALSE}
-cc_site
+densitometry_site
 ```
 
+**Figure 2** Canopy cover by site. ############ Need to work on this
+
+```{r fig.width=6, fig.height=4, echo=FALSE}
+cc_site_box
+```
+
+**Figure 3** Ground cover by site. Proportion of ground covered by different materials.
+
+```{r fig.width=6, fig.height=5, echo=FALSE}
+ground_site
+```
+
+**Figure 4** Height of trees by genus and site.
+
+```{r fig.width=6, fig.height=5, echo=FALSE}
+tree_genus_height
+```
+
+**Figure 5** Height of trees by genus and site.
+
+```{r fig.width=6, fig.height=5, echo=FALSE}
+tree_genus_height
+```
+
+**Figure 6** Canopy radius by tree genus
+
+```{r fig.width=6, fig.height=5, echo=FALSE}
+tree_genus_canopy
+```
+
+**Figure 7** Tree dbh by genus and site. Class 1: 2-4 cm; Class 2: 5-20 cm; Class 3: 20-30 cm; Class 4: >= 30 cm
+
+```{r fig.width=6, fig.height=5, echo=FALSE}
+tree_genus_dbh
+```
+
+**Differences between sites**
+-----------------------
+**Figure 8** Tree height by site.
+
+```{r fig.width=6, fig.height=5, echo=FALSE}
+tree_site_height
+```
+
+**Figure 9** Canopy radius by site.
+
+```{r fig.width=6, fig.height=5, echo=FALSE}
+tree_site_canopy
+```
+
+**Figure 10** Tree dbh by site. Class 1: 2-4 cm; Class 2: 5-20 cm; Class 3: 20-30 cm; Class 4: >= 30 cm.
+
+``` {r fig.width=6, fig.height=5, echo=FALSE}
+tree_site_dbh
+```
+
+**Figure 11** Shrub size by site.
+
+``` {r fig.width=6, fig.height=5, echo=FALSE}
+shrub_site_size
+```
