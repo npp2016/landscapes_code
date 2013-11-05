@@ -10,7 +10,7 @@ library(reshape)
 ##### CHOOSE WORKING DIRECTORY (uncomment the one you like)
 ## There are multiple .csv files in this folder
 wd = "C://Users/Anusha/Documents/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Excel_CSV_versions/Vegetation_Structure_data/"
-#wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/#Final_Databases_2013/Excel_CSV_versions/Vegetation_Structure_data/"
+#wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Excel_CSV_versions/Vegetation_Structure_data/"
 setwd(wd)
 
 ## Read in csv files
@@ -107,7 +107,7 @@ cc_site_box
 
 # Ground cover by site
 ground_site <- ggplot(m_ground, aes(x=variable, y=value, fill=variable)) + theme_bw() +
-  geom_boxplot() + facet_grid(~Site) + theme(axis.text.x=element_text(angle=90, vjust=0.5))
+  geom_boxplot() + facet_grid(~Site) + theme(axis.text.x=element_text(angle=60, vjust=0.5))
 ground_site
 
 # Plot tree height by genus
