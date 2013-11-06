@@ -15,3 +15,18 @@ setwd(wd)
 
 ## Read in csv files
 nest <- read.csv("NestData.csv")
+
+##-------- Cleaning and aggregating data
+
+##--------- Plots
+
+# TODO:
+# plot number of species found nesting at each site
+# plot number of nests found at each site
+# plot number of individuals, for each species that was observed nesting at each site
+# boxplots for nest height at the two sites
+# plot tree genera that had nests in them at the two sites
+# barplots for nest result at the two sites (num successful vs. depredated, etc.)
+# map locations for nest sites (NOTE need to dbl check UTM zone first)
+# boxplots for supporting branch diameter (could be interesting to know range)
+
