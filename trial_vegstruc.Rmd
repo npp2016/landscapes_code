@@ -11,7 +11,9 @@ Sarah R. Supp, Anusha Shankar, Tina Cormier
 
 **Results**
 ------------------
-We split the vegetation structure dataset into its multiple components: Trees, shrubs, canopy, and ground cover. Data were collected between 8 July, 2013 and 16 July, 2013. Here we compare canopy cover, ground cover, shrub sizes and species, and tree sizes and species across and between sites.
+We split the vegetation structure dataset into its multiple components: Trees, shrubs, canopy, and ground cover. Data were collected between 8 July, 2013 and 16 July, 2013. Data were collected from 3 points at Harshaw Creek (HC) and 9 points at Patagonia Lake/Sonoita Creek (PL/SC).
+
+NOTE: Points were chosen to show variation in measures (if two points seemed similar in tree/shrub cover, one was excluded). Points where accessibility was low (i.e. on a steep slope) were not sampled.
 
 **Descriptive graphs**
 -------------------
@@ -22,7 +24,7 @@ We split the vegetation structure dataset into its multiple components: Trees, s
 densitometry_site
 ```
 
-**Figure 2** Canopy cover by site. ############ Need to work on this
+**Figure 2** Canopy cover by site. Reiterates what the densitometry figure tells us- more canopy cover at HC than PL.
 
 ```{r fig.width=6, fig.height=4, echo=FALSE}
 cc_site_box
@@ -40,45 +42,27 @@ ground_site
 tree_genus_height
 ```
 
-**Figure 5** Height of trees by genus and site.
-
-```{r fig.width=6, fig.height=5, echo=FALSE}
-tree_genus_height
-```
-
-**Figure 6** Canopy radius by tree genus
-
-```{r fig.width=6, fig.height=5, echo=FALSE}
-tree_genus_canopy
-```
-
-**Figure 7** Tree dbh by genus and site. Class 1: 2-4 cm; Class 2: 5-20 cm; Class 3: 20-30 cm; Class 4: >= 30 cm
-
-```{r fig.width=6, fig.height=5, echo=FALSE}
-tree_genus_dbh
-```
-
 **Differences between sites**
 -----------------------
-**Figure 8** Tree height by site.
+**Figure 5** Tree height by site.
 
 ```{r fig.width=6, fig.height=5, echo=FALSE}
 tree_site_height
 ```
 
-**Figure 9** Canopy radius by site.
+**Figure 6** Canopy radius by site.
 
 ```{r fig.width=6, fig.height=5, echo=FALSE}
 tree_site_canopy
 ```
 
-**Figure 10** Tree dbh by site. Class 1: 2-4 cm; Class 2: 5-20 cm; Class 3: 20-30 cm; Class 4: >= 30 cm.
+**Figure 7** Tree dbh by site. Class 1: 2-4 cm; Class 2: 5-20 cm; Class 3: 20-30 cm; Class 4: >= 30 cm.
 
 ``` {r fig.width=6, fig.height=5, echo=FALSE}
 tree_site_dbh
 ```
 
-**Figure 11** Shrub size by site.
+**Figure 8** Shrub size by site. **NOTE**: Not scaled by the number of sites sampled. HC had 3 sites and PL/SC had 9 sites.
 
 ``` {r fig.width=6, fig.height=5, echo=FALSE}
 shrub_site_size
