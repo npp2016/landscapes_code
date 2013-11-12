@@ -21,6 +21,10 @@ trees <- read.csv("trees.csv")
 shrubs <- read.csv("shrubs.csv")
 ground <- read.csv("Groundcover.csv")
 
+## 2012 vegetation structure data to be appended to existing datasets
+veg_12_monica <- read.csv("Vegetation_structure_Monica_AS.csv")
+veg_12_gabriel <- read.csv("Vegetation_gabriel_AS.csv")
+
 ##-------- Cleaning and aggregating data
 
 # Renaming shrubs variables
