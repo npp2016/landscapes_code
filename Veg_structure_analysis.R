@@ -35,6 +35,20 @@ names(shrubs) <- c("Date", "Site", "Transect", "Point", "Observer", "Genus",
 
 canopy_df = data.frame(site = 1, point=1, numrows=1, meandensitometry =1, meancanopy=1, meansub=1, meanbranches=1)
 
+### TODO ###########
+#dataframe with canopy cover data only
+canopy = cover[,1:13]
+canopy[,c(10:13)] = canopy[,c(10:13)]/100
+names(ground) = c("Day", "Month", "Year", "Site", "Transect", "Point", "Observer", "Direction", "Distance", 
+                                     "densitometry","canopy", "subcanopy", "barebranches")
+
+#### dataframe with ground cover data only
+ground = canopy[,c(1,2,3,4,5,6,7,8,9,14,15,16,17,18,19,20,21)]
+ground[,c(10:17)] = ground[,c(10:17)]/100
+names(ground) = c("Day", "Month", "Year", "Site", "Transect", "Point", "Observer", "Direction", "Distance", 
+                              "shrub", "forb", "grass", "soil", "rock", "organicmaterial", "water", "disturbance")
+
+
 sites=c("HC", "PL/SC")
 points=sort(unique(canopy$Point))
 i=1
