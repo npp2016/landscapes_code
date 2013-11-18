@@ -15,9 +15,10 @@ setwd(wd)
 
 ## Read in csv files
 nest <- read.csv("NestData.csv")
+## Removed entry where Species is blank (Id 74) ASK SUSAN? ###################
+nest <- nest[-74,]
 
 ##-------- Cleaning and aggregating data
-###### NOTE: FIND OUT There is one entry where Species is blank (Id 74)
 m.nest <- melt(nest, id.vars=c("Id", "NestID", "Site"), 
                measure.vars=c("Species","Stage_Found", "Final_Result"), na.rm=T)
 
@@ -28,14 +29,13 @@ names(species_site) <- c("Site", "Species", "Richness")
 ##--------- Plots
 
 # TODO:
-# plot number of species found nesting at each site
-nests_site <- ggplot(m.nest, aes(x=Site, y=Id)) + geom_boxplot()
+# plot number of individuals of each species found nesting at each site
+nests_site <- ggplot(species_site, aes(x=Site, y=Richness, fill=factor(Site))) + geom_bar() + ylab("Nests") +
+  facet_grid(~Species) + theme_bw()
 nests_site
 
-# plot number of nests found at each site
-
-
-# plot number of individuals, for each species that was observed nesting at each site
+# plot number of nests found at each site - in first graph
+# plot number of individuals, for each species that was observed nesting at each site - see first graph
 # boxplots for nest height at the two sites
 # plot tree genera that had nests in them at the two sites
 # barplots for nest result at the two sites (num successful vs. depredated, etc.)
