@@ -14,17 +14,24 @@ wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_D
 setwd(wd)
 
 ## Read in csv files
-nest <- read.csv("NestData.csv")
+nest_uncleaned <- read.csv("NestData.csv")
 ## Removed entry where Species is blank (Id 74) ASK SUSAN? ###################
-nest <- nest[-74,]
+nest_na.rm <- nest_uncleaned[-74,]
+## Subset data from HC and PL/SC, leaving out TNC and EC points. 
+### ASK SUSAN if she wants to see without this ###############
+s <- c("HC", "PL/SC")
+nest <- subset(nest_na.rm, Site == s)
+# nest <- nest_na.rm # Uncomment beginning to keep restoration sites in the dataset
 
 ##-------- Cleaning and aggregating data
-m.nest <- melt(nest, id.vars=c("Id", "NestID", "Site"), 
-               measure.vars=c("Species","Stage_Found", "Final_Result"), na.rm=T)
-
 species_site <- aggregate(nest$Species, by=list(nest$Site, nest$Species), 
                           FUN=function(x) x=length(x))
 names(species_site) <- c("Site", "Species", "Richness")
+
+m.nestht <- melt(nest, id.vars=c("Id", "NestID", "Site", "Species"), 
+                 measure.vars=c("Nest_Height"), na.rm=T)
+
+
 
 ##--------- Plots
 
@@ -36,9 +43,21 @@ nests_site
 
 # plot number of nests found at each site - in first graph
 # plot number of individuals, for each species that was observed nesting at each site - see first graph
+
 # boxplots for nest height at the two sites
+nest_ht <- ggplot(m.nestht, aes(x=Site, y=value, fill=factor(Site))) + ylab("Nest Height") +
+  geom_boxplot() + theme_bw() + facet_grid(~Species)
+nest_ht
+
 # plot tree genera that had nests in them at the two sites
+
+
 # barplots for nest result at the two sites (num successful vs. depredated, etc.)
 # map locations for nest sites (NOTE need to dbl check UTM zone first)
 # boxplots for supporting branch diameter (could be interesting to know range)
 
+
+##--------- Analyses
+# t test to look at differences in nest height between species- Welch Two Sample t-test
+t.test(m.nest$value[m.nest$Species=="BBLH"], m.nest$value[m.nest$Species=="BCHU"])
+nestht_ttest <- ("t = -2.3781, df = 24.702, p-value = 0.02546")
