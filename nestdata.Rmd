@@ -1,0 +1,62 @@
+```{r, echo=FALSE, results='hide'}
+## source('Users/sarah/Documents/GitHub/landscapes_code/Veg_structure_analysis.R')
+source('C://Users/anusha/Documents/GitHub/landscapes_code/nest_data.r')
+```
+
+**Title:** Preliminary figures and results from the Hummingbird Monitoring Network nesting structure data
+========================================================
+**Code & Analysis** 
+--------------------------------------
+Anusha Shankar, Sarah Supp
+
+**Results**
+------------------
+
+This dataset describes hummingbird nest species, location, height; nest tree genus, and nest tree characteristics. The original dataset contains data from Harshaw Creek (HC), Patagonia Lake/Sonoita Creek (PL/SC), The Nature Conservancy (TNC), and El Coronado (EC). However, preliminary analyses were carried out only on HC and PL/SC data.  Data were collected between 29 April, 2013 and 17 July, 2013. A total of `r length(nest$Id)` nests were found and recorded.
+
+**Descriptive graphs**
+-------------------
+
+**Figure 1** Number of individuals of each species found nesting at each site.
+
+```{r fig.width=5, fig.height=4, echo=FALSE}
+nests_site
+```
+
+**Figure 2** Boxplots for nest height at the two sites
+
+```{r fig.width=6, fig.height=4, echo=FALSE}
+nest_ht
+```
+
+**Figure 3** Genra of trees where nests were found at the two sites
+
+```{r fig.width=6, fig.height=5, echo=FALSE}
+nest_trees
+```
+
+**Figure 4** Heights of trees where nests were found, at the two sites
+
+```{r fig.width=6, fig.height=5, echo=FALSE}
+tree_ht
+```
+
+**Figure 5** Status of nests when they were found
+
+```{r fig.width=6, fig.height=5, echo=FALSE}
+stage_found
+```
+
+**Figure 6** Barplots for nest result at the two sites
+
+```{r fig.width=6, fig.height=5, echo=FALSE}
+nest_results
+```
+
+**Ststistical analysis** T test looking at difference in nest height between species across sites.
+
+```{r }
+report(t.nestht)
+```
+
+We still need some clarifications on some of the other variables like Overhead branches- Metadata questions.
