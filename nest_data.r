@@ -10,8 +10,8 @@ library(RColorBrewer)
 
 ##### CHOOSE WORKING DIRECTORY (uncomment the one you like)
 ## There are multiple .csv files in this folder
-#wd = "C://Users/Anusha/Documents/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Excel_CSV_versions/"
-wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Excel_CSV_versions/"
+wd = "C://Users/Anusha/Documents/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Excel_CSV_versions/"
+#wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Excel_CSV_versions/"
 setwd(wd)
 
 ## Read in csv files
@@ -24,16 +24,22 @@ s <- c("HC", "PL/SC")
 nest <- subset(nest_na.rm, Site == s)
 # nest <- nest_na.rm # Uncomment beginning to keep restoration sites in the dataset
 
+## Total number of nests surveyed which we are including in the analysis.
+N <- length(nest$Id)
+
 ##-------- Cleaning and aggregating data
+## Melting everything together wasn't giving proper graphs, need to figure out what went wrong.
 species_site <- aggregate(nest$Species, by=list(nest$Site, nest$Species), 
                           FUN=function(x) x=length(x))
 names(species_site) <- c("Site", "Species", "Richness")
 
 m.nestht <- melt(nest, id.vars=c("Site", "Species"), 
-                 measure.vars=c("Nest_Height"), na.rm=T)
+                 measure.vars="Nest_Height", na.rm=T)
 
 m.nestgenus <- melt(nest, id.vars=c("Site", "Species"), 
-                    measure.vars=c("Substrate_Genus"), na.rm=T)
+                    measure.vars="Substrate_Genus", na.rm=T)
+
+m.treeht <- melt(nest, id.vars=c("Site", "Species"), measure.vars="Substrate_Height", na.rm=T)
 
 agg.stage <- aggregate(nest$Site, by=list(nest$Site, nest$Stage_Found), 
                            FUN=function(x) x=length(x))
@@ -54,7 +60,7 @@ nests_site
 # plot number of individuals per species that was observed nesting at each site - see first graph
 
 # boxplots for nest height at the two sites
-nest_ht <- ggplot(subset(m.nestht, variable=="Nest_Height"), aes(x=Site, y=value)) + 
+nest_ht <- ggplot(m.nestht, aes(x=Site, y=value)) + 
   xlab("Site") + ylab("Nest Height") + geom_boxplot() + theme_bw() + facet_grid(~Species)
 nest_ht
 
@@ -63,15 +69,20 @@ nest_trees <- ggplot(m.nestgenus, aes(x=Species, y=value)) + ylab("Tree Genus") 
   geom_point(pch=18, size=4) + theme_bw() + facet_grid(~Site)
 nest_trees
 
+# Plot nest tree heights
+tree_ht <- ggplot(m.treeht, aes(x=Site, y=value)) + 
+  xlab("Site") + ylab("Tree Height") + geom_boxplot() + theme_bw()
+tree_ht
+
 # Stage the nests were found in
-stage_found <- ggplot(agg.stage, aes(Stage_Found, Nests, col=factor(Stage_Found))) + 
-  geom_point(size=3) + theme_bw() + facet_grid(~Site) + 
+stage_found <- ggplot(agg.stage, aes(Stage_Found, Nests, fill=factor(Stage_Found))) + 
+  geom_bar() + theme_bw() + facet_grid(~Site) + 
   theme(axis.text.x=element_text(angle=60, vjust=1, hjust=1))
 stage_found
 
-# barplots for nest result at the two sites (num successful vs. depredated, etc.)
-nest_results <- ggplot(agg.result, aes(Final_Status, Nests, col=factor(Final_Status))) + 
-  geom_point(size=3) + theme_bw() + facet_grid(~Site) + 
+# Barplots for nest result at the two sites (num successful vs. depredated, etc.)
+nest_results <- ggplot(agg.result, aes(Final_Status, Nests, fill=factor(Final_Status))) + 
+  geom_bar() + theme_bw() + facet_grid(~Site) + 
   theme(axis.text.x=element_text(angle=60, vjust=1, hjust=1))
 nest_results
 
