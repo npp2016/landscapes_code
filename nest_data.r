@@ -45,18 +45,17 @@ names(agg.result) <- c("Site", "Final_Status", "Nests")
 
 ##--------- Plots
 
-# TODO:
 # plot number of individuals of each species found nesting at each site
-nests_site <- ggplot(species_site, aes(x=Site, y=Richness, fill=factor(Site))) + geom_bar() + ylab("Nests") +
-  facet_grid(~Species) + theme_bw()
+nests_site <- ggplot(species_site, aes(x=Site, y=Richness, fill=factor(Site))) + 
+  geom_bar() + ylab("Nests") + facet_grid(~Species) + theme_bw()
 nests_site
 
 # plot number of nests found at each site - in first graph
-# plot number of individuals, for each species that was observed nesting at each site - see first graph
+# plot number of individuals per species that was observed nesting at each site - see first graph
 
 # boxplots for nest height at the two sites
 nest_ht <- ggplot(subset(m.nestht, variable=="Nest_Height"), aes(x=Site, y=value)) + 
-  xlab("Site") + ylab("Nest Height") + geom_point() + theme_bw() + facet_grid(~Species)
+  xlab("Site") + ylab("Nest Height") + geom_boxplot() + theme_bw() + facet_grid(~Species)
 nest_ht
 
 # plot tree genera that had nests in them at the two sites
@@ -82,7 +81,7 @@ nest_results
 
 ##--------- Analyses
 # t test to look at differences in nest height between species- Welch Two Sample t-test
-t.nestht <- t.test(m.nest$value[m.nest$Species=="BBLH"], m.nest$value[m.nest$Species=="BCHU"])
+t.nestht <- t.test(m.nestht$value[m.nestht$Species=="BBLH"], m.nestht$value[m.nestht$Species=="BCHU"])
 
 # Function to report values from t tests
 report <- function (nest_ttest) {
