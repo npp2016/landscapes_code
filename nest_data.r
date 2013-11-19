@@ -35,6 +35,14 @@ m.nestht <- melt(nest, id.vars=c("Site", "Species"),
 m.nestgenus <- melt(nest, id.vars=c("Site", "Species"), 
                     measure.vars=c("Substrate_Genus"), na.rm=T)
 
+agg.stage <- aggregate(nest$Site, by=list(nest$Site, nest$Stage_Found), 
+                           FUN=function(x) x=length(x))
+names(agg.stage) <- c("Site","Stage_Found","Nests")
+
+agg.result <- aggregate(nest$Site, by=list(nest$Site, nest$Final_Result), 
+                          FUN=function(x) x=length(x))
+names(agg.result) <- c("Site", "Final_Status", "Nests")
+
 ##--------- Plots
 
 # TODO:
@@ -56,9 +64,17 @@ nest_trees <- ggplot(m.nestgenus, aes(x=Species, y=value)) + ylab("Tree Genus") 
   geom_point(pch=18, size=4) + theme_bw() + facet_grid(~Site)
 nest_trees
 
+# Stage the nests were found in
+stage_found <- ggplot(agg.stage, aes(Stage_Found, Nests, col=factor(Stage_Found))) + 
+  geom_point(size=3) + theme_bw() + facet_grid(~Site) + 
+  theme(axis.text.x=element_text(angle=60, vjust=1, hjust=1))
+stage_found
+
 # barplots for nest result at the two sites (num successful vs. depredated, etc.)
-nest_result <- ggplot(nest, aes(Site, Final_Result)) + geom_point() + theme_bw()
-nest_result
+nest_results <- ggplot(agg.result, aes(Final_Status, Nests, col=factor(Final_Status))) + 
+  geom_point(size=3) + theme_bw() + facet_grid(~Site) + 
+  theme(axis.text.x=element_text(angle=60, vjust=1, hjust=1))
+nest_results
 
 # map locations for nest sites (NOTE need to dbl check UTM zone first)
 # boxplots for supporting branch diameter (could be interesting to know range)
