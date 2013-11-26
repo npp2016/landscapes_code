@@ -16,8 +16,8 @@ setwd(wd)
 
 ## Read in csv files
 nest_uncleaned <- read.csv("NestData.csv")
-## Removed entry where Species is blank (Id 74) ASK SUSAN? ###################
-nest_na.rm <- nest_uncleaned[-74,]
+  nest_na.rm <- nest_uncleaned[-74,]  ## Removed entry where Species is blank (Id 74) ASK SUSAN? ###################
+nestreview <- read.csv("ReviewNestData.csv", header = T)
 ## Subset data from HC and PL/SC, leaving out TNC and EC points. 
 ### ASK SUSAN if she wants to see without this ###############
 s <- c("HC", "PL/SC")
