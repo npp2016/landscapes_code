@@ -17,17 +17,27 @@ pheno = read.csv("PhenologyData.csv", header = T)
 floral = read.csv("FloralCensusData.csv", header = T)
 nectar = read.csv("StandingCropData.csv", header = T)
 
-#TODO
-#convert date to julian day
 ## Add a column for julian day, to help plot time series data
 for (row in 1:nrow(pheno)){
-  line = pheno[row,]
-  pheno$julian[row] = julian(line$Month, line$Day, line$Year,
-                              origin. = c(month=1, day=1, year=line$Year))
+  line <- pheno[row,]
+  pheno$julian[row] <- julian(line$Month, line$Day, line$Year,
+                              origin. <- c(month=1, day=1, year=line$Year))
 }
 
-#replace plant species with species code? (easier to link between tables in the database w/o using regex)
+## subset only data from the two main landscapes
+pheno <- subset(pheno, Site == "HC" | Site == "PL/SC")
+# Remove rows with only Genus and no species name
+pheno <- pheno[-c(which(pheno$PlantSpecies=="Cersium")),]
 
+#replace plant species with species code? (easier to link between tables in the database w/o using regex)
+# @Sarah: Did you mean in the future we should advocate using species codes?
+# AS: Tried my hand at a strsplit anyway, made species codes!! So happy.
+Gencode <- substr(pheno$PlantSpecies, 1,2)
+Spcode <- 0
+for (i in 1:length(pheno$PlantSpecies)) {
+  Spcode[i] <- substr(sapply(strsplit(as.character(pheno$PlantSpecies[i]), " "), "[[", 2), 1,2)
+  pheno$Species[i] <- paste(Gencode[i],Spcode[i], collapse="", sep="")
+}
 
 #slice data may not be great (slice method was deemed not to work well)
 #plot proportion of plant that is buds/flowers/fruits
