@@ -4,6 +4,7 @@
 library(ggplot2)
 library(reshape)
 library(RColorBrewer)
+library(chron)
 
 ##### CHOOSE WORKING DIRECTORY (uncomment the one you like)
 ## There are multiple .csv files in this folder
@@ -18,7 +19,16 @@ nectar = read.csv("StandingCropData.csv", header = T)
 
 #TODO
 #convert date to julian day
+## Add a column for julian day, to help plot time series data
+for (row in 1:nrow(pheno)){
+  line = pheno[row,]
+  pheno$julian[row] = julian(line$Month, line$Day, line$Year,
+                              origin. = c(month=1, day=1, year=line$Year))
+}
+
 #replace plant species with species code? (easier to link between tables in the database w/o using regex)
+
+
 #slice data may not be great (slice method was deemed not to work well)
 #plot proportion of plant that is buds/flowers/fruits
 #by species?
