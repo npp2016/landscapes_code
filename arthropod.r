@@ -43,7 +43,8 @@ ggplot(agg.arthro, aes(x=Site, y=Count, fill=Site)) + geom_bar(stat="identity") 
 ggplot(agg.arthro, aes(x=Site, y=scaled_count, fill=Site)) + geom_bar(stat="identity") + theme_bw()
 
 # plot insects across Order
-insect_order <- ggplot(m.arthro, aes(x=variable, y=value)) + geom_point(size=1) +
+insect_order <- ggplot(m.arthro, aes(x=variable, y=value)) + 
+  geom_point(size=2, pch=16, col="dark green") +
   theme_bw() +  xlab("Order") + ylab("Count") +
   theme(axis.text.x=element_text(angle=60, vjust=1, hjust=1)) 
 insect_order
