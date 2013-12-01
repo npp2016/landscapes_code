@@ -1,4 +1,4 @@
-# This code is to run exploratory analyses on observational data 
+# This code is to run exploratory analyses on observational nest data 
 # from the Summer 2013 field study in Patagonia, AZ
 # This code deals with the hummingbird nest data. Contact for data questions: Monica
 # Code developed by: Anusha Shankar, Sarah Supp, and Catherine Graham
