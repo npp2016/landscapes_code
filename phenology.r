@@ -1,4 +1,6 @@
-# code for analyzing the floral phenology data
+# code for analyzing the floral phenology data. Contact:
+# From the Summer 2013 field study in Patagonia, AZ
+# Code developed by: Anusha Shankar, Sarah Supp, and Catherine Graham
 
 ## Load packages
 library(ggplot2)
@@ -39,10 +41,28 @@ for (i in 1:length(pheno$PlantSpecies)) {
   pheno$Species[i] <- paste(Gencode[i],Spcode[i], collapse="", sep="")
 }
 
+#Melt pheno dataframe by species
+m.pheno <- melt(pheno, id.vars="Species", measure.vars=c("TotalBuds", "TotalFlowers", "TotalFruits"))
+
+m.pheno_date <- melt(pheno, id.vars="julian", 
+                     measure.vars=c("TotalBuds", "TotalFlowers", "TotalFruits"))
+
 #slice data may not be great (slice method was deemed not to work well)
+# AS: So should we subset that out? - FIXME
+
 #plot proportion of plant that is buds/flowers/fruits
-#by species?
+#by species
+phenol.sp <- ggplot(m.pheno, aes(x=Species, y=value, fill=Species)) + geom_boxplot() + 
+  ylab("Count") + facet_grid(~variable) + theme_bw() +
+  theme(axis.text.x=element_text(angle=60, vjust=1, hjust=1)) 
+phenol.sp
+
 #by date?
+phenol.date <- ggplot(m.pheno, aes(x=julian, y=variable)) + geom_point() + 
+  ylab("Count") + theme_bw()
++ theme(axis.text.x=element_text(angle=60, vjust=1, hjust=1)) 
+phenol.date
+
 #by site?
 
 #plot nectar by plant species, site, and date, time of day?
