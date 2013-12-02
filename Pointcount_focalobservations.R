@@ -28,7 +28,7 @@ for (row in 1:nrow(pointdata)){
 ## subset only data from the two main landscapes
 pointdata = subset(pointdata, Site == "HC" | Site == "PL/SC")
 
-## subset data that does not include surveys where no birds were seen
+## subset data that excludes surveys where no birds were seen
 obs = subset(pointdata, Species.Code!="None")
   obs$Site <- factor(obs$Site, levels = c('HC', 'PL/SC'))
   obs$Species.Code <- factor(obs$Species.Code, levels = c("ANHU", "BBLH", "BCHU", "COHU", "RUHU", "VCHU", "UNHU"))
