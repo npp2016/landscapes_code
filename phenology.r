@@ -7,6 +7,7 @@ library(ggplot2)
 library(reshape)
 library(RColorBrewer)
 library(chron)
+library(R.utils)
 
 ##### CHOOSE WORKING DIRECTORY (uncomment the one you like)
 ## There are multiple .csv files in this folder
@@ -28,24 +29,40 @@ for (row in 1:nrow(pheno)){
 
 ## subset only data from the two main landscapes
 pheno <- subset(pheno, Site == "HC" | Site == "PL/SC")
-# Remove rows with only Genus and no species name
+# Removing rows with only Genus and no species name
 pheno <- pheno[-c(which(pheno$PlantSpecies=="Cersium")),]
 
 #replace plant species with species code? (easier to link between tables in the database w/o using regex)
 # @Sarah: Did you mean in the future we should advocate using species codes?
-# AS: Tried my hand at a strsplit anyway, made species codes!! So happy.
+# AS: Tried my hand at a strsplit anyway, made species codes!! Happy.
 Gencode <- substr(pheno$PlantSpecies, 1,2)
 Spcode <- 0
 for (i in 1:length(pheno$PlantSpecies)) {
-  Spcode[i] <- substr(sapply(strsplit(as.character(pheno$PlantSpecies[i]), " "), "[[", 2), 1,2)
+  Spcode[i] <- capitalize(substr(sapply(strsplit(as.character(pheno$PlantSpecies[i]), " "), "[[", 2), 1,2))
   pheno$Species[i] <- paste(Gencode[i],Spcode[i], collapse="", sep="")
 }
 
 #Melt pheno dataframe by species
 m.pheno <- melt(pheno, id.vars="Species", measure.vars=c("TotalBuds", "TotalFlowers", "TotalFruits"))
 
+#By date
 m.pheno_date <- melt(pheno, id.vars="julian", 
                      measure.vars=c("TotalBuds", "TotalFlowers", "TotalFruits"))
+
+## Melt counts by day and site
+## There must be a more efficient way of doing multiple aggregates!
+agg.buds <- aggregate(pheno$TotalBuds, by=list(pheno$julian, pheno$Species, pheno$Site), FUN=sum)
+names(agg.buds) <- c("Date", "Species", "Site", "TotalBuds")
+agg.flowers <- aggregate(pheno$TotalFlowers, by=list(pheno$Site, pheno$julian, pheno$Species), FUN=sum)
+names(agg.flowers) <- c("Date", "Species", "Site", "TotalFlowers")
+agg.fruits <- aggregate(pheno$TotalFruits, by=list(pheno$Site, pheno$julian, pheno$Species), FUN=sum)
+names(agg.fruits) <- c("Date", "Species", "Site", "TotalFruits")
+agg.pheno <- agg.buds
+agg.pheno <- merge(agg.buds, agg.flowers, agg.fruits, by=intersect())
+
+
+richnesstime <- aggregate(sppdata$Species.Code, by=list(sppdata$julian, sppdata$Session, sppdata$Site),
+                          FUN=function(u) length(unique(u)))
 
 #slice data may not be great (slice method was deemed not to work well)
 # AS: So should we subset that out? - FIXME
@@ -58,7 +75,7 @@ phenol.sp <- ggplot(m.pheno, aes(x=Species, y=value, fill=Species)) + geom_boxpl
 phenol.sp
 
 #by date?
-phenol.date <- ggplot(m.pheno, aes(x=julian, y=variable)) + geom_point() + 
+phenol.date <- ggplot(m.pheno_date, aes(x=julian, y=variable)) + coord_flip() + geom_point() + 
   ylab("Count") + theme_bw()
 + theme(axis.text.x=element_text(angle=60, vjust=1, hjust=1)) 
 phenol.date
