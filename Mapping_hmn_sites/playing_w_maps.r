@@ -95,7 +95,7 @@ ggmap(map, extent='device')
 hmnmap <- qmap("Flagstaff, AZ", zoom = 4, legend = "bottomleft")
 no_years <- hmnmap +
   geom_point(aes(x = londd, y = latdd, colour = status, size = No_of_years),
-             data = hmn) + scale_color_manual(values = c("#FA5882", "black")) # Points are right now pick and black
+             data = hmn) + scale_color_manual(values = c("#FA5882", "black")) # Points are right now pink and black
 no_years
 
 active_sites <- hmnmap +
