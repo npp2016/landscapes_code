@@ -51,18 +51,20 @@ m.pheno_date <- melt(pheno, id.vars="julian",
 
 ## Melt counts by day and site
 ## There must be a more efficient way of doing multiple aggregates!
-agg.buds <- aggregate(pheno$TotalBuds, by=list(pheno$julian, pheno$Species, pheno$Site), FUN=sum)
+agg.buds <- aggregate(pheno$TotalBuds, 
+                      by=list(pheno$julian, pheno$Species, pheno$Site), FUN=sum)
 names(agg.buds) <- c("Date", "Species", "Site", "TotalBuds")
-agg.flowers <- aggregate(pheno$TotalFlowers, by=list(pheno$Site, pheno$julian, pheno$Species), FUN=sum)
+agg.flowers <- aggregate(pheno$TotalFlowers, 
+                         by=list(pheno$julian, pheno$Species, pheno$Site), FUN=sum)
 names(agg.flowers) <- c("Date", "Species", "Site", "TotalFlowers")
-agg.fruits <- aggregate(pheno$TotalFruits, by=list(pheno$Site, pheno$julian, pheno$Species), FUN=sum)
+agg.fruits <- aggregate(pheno$TotalFruits, 
+                        by=list(pheno$julian, pheno$Species, pheno$Site), FUN=sum)
 names(agg.fruits) <- c("Date", "Species", "Site", "TotalFruits")
-agg.pheno <- agg.buds
-agg.pheno <- merge(agg.buds, agg.flowers, agg.fruits, by=intersect())
+agg.pheno <- data.frame(agg.buds, agg.flowers[,-c(1,2,3)], agg.fruits[,-c(1,2,3)])
+names(agg.pheno) <- c("Date", "Species", "Site", "Buds", "Flowers", "Fruits")
 
-
-richnesstime <- aggregate(sppdata$Species.Code, by=list(sppdata$julian, sppdata$Session, sppdata$Site),
-                          FUN=function(u) length(unique(u)))
+m.pheno_date <- melt(agg.pheno, id.vars=c("Date", "Species", "Site"), 
+                     measure.vars=c("Buds", "Flowers", "Fruits"))
 
 #slice data may not be great (slice method was deemed not to work well)
 # AS: So should we subset that out? - FIXME
@@ -75,9 +77,8 @@ phenol.sp <- ggplot(m.pheno, aes(x=Species, y=value, fill=Species)) + geom_boxpl
 phenol.sp
 
 #by date?
-phenol.date <- ggplot(m.pheno_date, aes(x=julian, y=variable)) + coord_flip() + geom_point() + 
-  ylab("Count") + theme_bw()
-+ theme(axis.text.x=element_text(angle=60, vjust=1, hjust=1)) 
+phenol.date <- ggplot(m.pheno_date, aes(x=Date, y=value)) + 
+  geom_point(size=2, col="dark green") + ylab("Count") + theme_bw() + facet_grid(~variable)
 phenol.date
 
 #by site?
