@@ -20,30 +20,47 @@ pheno = read.csv("PhenologyData.csv", header = T)
 floral = read.csv("FloralCensusData.csv", header = T)
 nectar = read.csv("StandingCropData.csv", header = T)
 
-## Add a column for julian day, to help plot time series data
-for (row in 1:nrow(pheno)){
-  line <- pheno[row,]
-  pheno$julian[row] <- julian(line$Month, line$Day, line$Year,
-                              origin. <- c(month=1, day=1, year=line$Year))
-}
+##### AS: NOTE to self- check metadata for how they calculated Totals ------##
 
 ## subset only data from the two main landscapes
 pheno <- subset(pheno, Site == "HC" | Site == "PL/SC")
 # Removing rows with only Genus and no species name
 pheno <- pheno[-c(which(pheno$PlantSpecies=="Cersium")),]
 
-#replace plant species with species code? (easier to link between tables in the database w/o using regex)
-# @Sarah: Did you mean in the future we should advocate using species codes?
-# AS: Tried my hand at a strsplit anyway, made species codes!! Happy.
-Gencode <- substr(pheno$PlantSpecies, 1,2)
-Spcode <- 0
-for (i in 1:length(pheno$PlantSpecies)) {
-  Spcode[i] <- capitalize(substr(sapply(strsplit(as.character(pheno$PlantSpecies[i]), " "), "[[", 2), 1,2))
-  pheno$Species[i] <- paste(Gencode[i],Spcode[i], collapse="", sep="")
+## Add a column for julian day, to help plot time series data
+JulianConversion <- function(dat) {
+  for (row in 1:nrow(dat)){
+    line <- dat[row,]
+    dat$julian[row] <- julian(line$Month, line$Day, line$Year,
+                              origin. <- c(month=1, day=1, year=line$Year))
+  }
+  return(dat$julian)
 }
 
-#Melt pheno dataframe by species, site and date
-m.pheno <- melt(pheno, id.vars=c("Site","Species","julian"), measure.vars=c("TotalBuds", "TotalFlowers", "TotalFruits"))
+pheno$julian <- JulianConversion(pheno)
+nectar$julian <- JulianConversion(nectar)
+
+#replace plant species with species code? (easier to link between tables in the database w/o using regex)
+# @Sarah: Did you mean in the future we should advocate using species codes? Or use them now?
+# AS: Tried my hand at a strsplit anyway, made species codes!! Happy.
+SpeciesCode <- function(dat) {
+  Gencode <- substr(dat$PlantSpecies, 1,2)
+  Spcode <- 0
+  for (i in 1:length(dat$PlantSpecies)) {
+    Spcode[i] <- capitalize(substr(sapply(strsplit(as.character(dat$PlantSpecies[i]), " "), "[[", 2), 1,2))
+    dat$Species[i] <- paste(Gencode[i],Spcode[i], collapse="", sep="")
+  }
+  return(dat$Species)
+}
+
+pheno$Species <- SpeciesCode(pheno)
+nectar$Species <- SpeciesCode(nectar)
+
+#Melt dataframes by species, site and date
+m.pheno <- melt(pheno, id.vars=c("Site","Species","julian"), 
+                measure.vars=c("TotalBuds", "TotalFlowers", "TotalFruits"))
+m.nectar <- melt(nectar, id.vars=c("Site", "Species", "julian"), 
+                 measure.vars=c("Calories"))
 
 ##### --- Plots ----######
 #slice data may not be great (slice method was deemed not to work well)
@@ -68,6 +85,8 @@ phenol.site <- ggplot(m.pheno, aes(x=Site, y=value)) + geom_boxplot() +
 phenol.site
 
 #plot nectar by plant species, site, and date, time of day?
+
+
 #need to go into data excel and make sure time shows up as time only #FIXME
 #convert date to julian day
 #volume (calculated from LengthNectar)
