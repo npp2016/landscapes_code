@@ -42,30 +42,10 @@ for (i in 1:length(pheno$PlantSpecies)) {
   pheno$Species[i] <- paste(Gencode[i],Spcode[i], collapse="", sep="")
 }
 
-#Melt pheno dataframe by species
-m.pheno <- melt(pheno, id.vars="Species", measure.vars=c("TotalBuds", "TotalFlowers", "TotalFruits"))
+#Melt pheno dataframe by species, site and date
+m.pheno <- melt(pheno, id.vars=c("Site","Species","julian"), measure.vars=c("TotalBuds", "TotalFlowers", "TotalFruits"))
 
-#By date
-m.pheno_date <- melt(pheno, id.vars="julian", 
-                     measure.vars=c("TotalBuds", "TotalFlowers", "TotalFruits"))
-
-## Melt counts by day and site
-## There must be a more efficient way of doing multiple aggregates!
-agg.buds <- aggregate(pheno$TotalBuds, 
-                      by=list(pheno$julian, pheno$Species, pheno$Site), FUN=sum)
-names(agg.buds) <- c("Date", "Species", "Site", "TotalBuds")
-agg.flowers <- aggregate(pheno$TotalFlowers, 
-                         by=list(pheno$julian, pheno$Species, pheno$Site), FUN=sum)
-names(agg.flowers) <- c("Date", "Species", "Site", "TotalFlowers")
-agg.fruits <- aggregate(pheno$TotalFruits, 
-                        by=list(pheno$julian, pheno$Species, pheno$Site), FUN=sum)
-names(agg.fruits) <- c("Date", "Species", "Site", "TotalFruits")
-agg.pheno <- data.frame(agg.buds, agg.flowers[,-c(1,2,3)], agg.fruits[,-c(1,2,3)])
-names(agg.pheno) <- c("Date", "Species", "Site", "Buds", "Flowers", "Fruits")
-
-m.pheno_date <- melt(agg.pheno, id.vars=c("Date", "Species", "Site"), 
-                     measure.vars=c("Buds", "Flowers", "Fruits"))
-
+##### --- Plots ----######
 #slice data may not be great (slice method was deemed not to work well)
 # AS: So should we subset that out? - FIXME
 
@@ -76,12 +56,16 @@ phenol.sp <- ggplot(m.pheno, aes(x=Species, y=value, fill=Species)) + geom_boxpl
   theme(axis.text.x=element_text(angle=60, vjust=1, hjust=1)) 
 phenol.sp
 
-#by date?
-phenol.date <- ggplot(m.pheno_date, aes(x=Date, y=value)) + 
+#by date
+phenol.date <- ggplot(m.pheno, aes(x=julian, y=value)) + stat_smooth(method='lm') +
   geom_point(size=2, col="dark green") + ylab("Count") + theme_bw() + facet_grid(~variable)
 phenol.date
 
-#by site?
+#by site
+phenol.site <- ggplot(m.pheno, aes(x=Site, y=value)) + geom_boxplot() + 
+  ylab("Count") + facet_grid(~variable) + theme_bw() +
+  theme(axis.text.x=element_text(angle=60, vjust=1, hjust=1))
+phenol.site
 
 #plot nectar by plant species, site, and date, time of day?
 #need to go into data excel and make sure time shows up as time only #FIXME
