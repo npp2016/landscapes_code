@@ -24,6 +24,7 @@ nectar = read.csv("StandingCropData.csv", header = T)
 
 ## subset only data from the two main landscapes
 pheno <- subset(pheno, Site == "HC" | Site == "PL/SC")
+nectar <- subset(nectar, Site == "HC" | Site == "PL/SC")
 # Removing rows with only Genus and no species name
 pheno <- pheno[-c(which(pheno$PlantSpecies=="Cersium")),]
 
@@ -85,7 +86,12 @@ phenol.site <- ggplot(m.pheno, aes(x=Site, y=value)) + geom_boxplot() +
 phenol.site
 
 #plot nectar by plant species, site, and date, time of day?
-
+nec.site <- ggplot(nectar, aes(Site, Calories)) + geom_boxplot()
+nec.site
+nec.date <- ggplot(nectar, aes(julian, Calories)) + geom_point()
+nec.date
+nec.species <- ggplot(nectar, aes(Species, Calories)) + geom_boxplot()
+nec.species
 
 #need to go into data excel and make sure time shows up as time only #FIXME
 #convert date to julian day
@@ -93,4 +99,3 @@ phenol.site
 #calories
 #NOTE: Volume, molarity, calories and LengthNectar are all related measurements. 
 #      Probably most interesting to plot Volume and Calories
-
