@@ -17,6 +17,7 @@ setwd(wd)
 
 ## Read in csv files
 pheno = read.csv("PhenologyData.csv", header = T)
+#Not using floral yet
 floral = read.csv("FloralCensusData.csv", header = T)
 nectar = read.csv("StandingCropData.csv", header = T)
 
@@ -68,7 +69,7 @@ m.nectar <- melt(nectar, id.vars=c("Site", "Species", "julian"),
 # AS: So should we subset that out? - FIXME
 
 # Phenology data
-#plot proportion of plant that is buds/flowers/fruits. 
+# plot proportion of plant that is buds/flowers/fruits. 
 # TODO -------- Would this be more useful as proportions? I have plotted absolute numbers.
 #by species
 phenol.sp <- ggplot(m.pheno, aes(x=Species, y=value, fill=Species)) + geom_boxplot() + 
