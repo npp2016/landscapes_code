@@ -68,7 +68,8 @@ m.nectar <- melt(nectar, id.vars=c("Site", "Species", "julian"),
 # AS: So should we subset that out? - FIXME
 
 # Phenology data
-#plot proportion of plant that is buds/flowers/fruits
+#plot proportion of plant that is buds/flowers/fruits. 
+# TODO -------- Would this be more useful as proportions? I have plotted absolute numbers.
 #by species
 phenol.sp <- ggplot(m.pheno, aes(x=Species, y=value, fill=Species)) + geom_boxplot() + 
   ylab("Count") + facet_grid(~variable) + theme_bw() +
@@ -95,7 +96,7 @@ vol.date
 vol.species <- ggplot(nectar, aes(Species, Volume)) + geom_boxplot()
 vol.species
 
-## Interesting small changes between calories and nectar. Trade-off for hummingbirds between
+## AS: Interesting small changes between calories and nectar. Trade-off for hummingbirds between
 # nectar calories and water content? I wonder if resource use switches in dry seasons based
 # on nectar volume more than calories. Energy is important, but how important is water?
 
