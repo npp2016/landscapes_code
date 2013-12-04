@@ -67,6 +67,7 @@ m.nectar <- melt(nectar, id.vars=c("Site", "Species", "julian"),
 #slice data may not be great (slice method was deemed not to work well)
 # AS: So should we subset that out? - FIXME
 
+# Phenology data
 #plot proportion of plant that is buds/flowers/fruits
 #by species
 phenol.sp <- ggplot(m.pheno, aes(x=Species, y=value, fill=Species)) + geom_boxplot() + 
@@ -85,17 +86,23 @@ phenol.site <- ggplot(m.pheno, aes(x=Site, y=value)) + geom_boxplot() +
   theme(axis.text.x=element_text(angle=60, vjust=1, hjust=1))
 phenol.site
 
-#plot nectar by plant species, site, and date, time of day?
-nec.site <- ggplot(nectar, aes(Site, Calories)) + geom_boxplot()
-nec.site
-nec.date <- ggplot(nectar, aes(julian, Calories)) + geom_point()
-nec.date
-nec.species <- ggplot(nectar, aes(Species, Calories)) + geom_boxplot()
-nec.species
-
-#need to go into data excel and make sure time shows up as time only #FIXME
-#convert date to julian day
+## Nectar data
 #volume (calculated from LengthNectar)
-#calories
-#NOTE: Volume, molarity, calories and LengthNectar are all related measurements. 
-#      Probably most interesting to plot Volume and Calories
+vol.site <- ggplot(nectar, aes(Site, Volume)) + geom_boxplot()
+vol.site
+vol.date <- ggplot(nectar, aes(julian, Volume)) + geom_point()
+vol.date
+vol.species <- ggplot(nectar, aes(Species, Volume)) + geom_boxplot()
+vol.species
+
+## Interesting small changes between calories and nectar. Trade-off for hummingbirds between
+# nectar calories and water content? I wonder if resource use switches in dry seasons based
+# on nectar volume more than calories. Energy is important, but how important is water?
+
+#plot Calories by plant species, site, and date, time of day
+cal.site <- ggplot(nectar, aes(Site, Calories)) + geom_boxplot()
+cal.site
+cal.date <- ggplot(nectar, aes(julian, Calories)) + geom_point()
+cal.date
+cal.species <- ggplot(nectar, aes(Species, Calories)) + geom_boxplot()
+cal.species
