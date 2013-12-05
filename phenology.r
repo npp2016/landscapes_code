@@ -21,16 +21,10 @@ pheno = read.csv("PhenologyData.csv", header = T)
 floral = read.csv("FloralCensusData.csv", header = T)
 nectar = read.csv("StandingCropData.csv", header = T)
 
-##### AS: NOTE to self- check metadata for how they calculated Totals ------##
+##-------------------- FUNCTIONS
 
-## subset only data from the two main landscapes
-pheno <- subset(pheno, Site == "HC" | Site == "PL/SC")
-nectar <- subset(nectar, Site == "HC" | Site == "PL/SC")
-# Removing rows with only Genus and no species name
-pheno <- pheno[-c(which(pheno$PlantSpecies=="Cersium")),]
-
-## Add a column for julian day, to help plot time series data
 JulianConversion <- function(dat) {
+  #converts date to julian day, so it can be easily plotted
   for (row in 1:nrow(dat)){
     line <- dat[row,]
     dat$julian[row] <- julian(line$Month, line$Day, line$Year,
@@ -39,13 +33,6 @@ JulianConversion <- function(dat) {
   return(dat$julian)
 }
 
-pheno$julian <- JulianConversion(pheno)
-nectar$julian <- JulianConversion(nectar)
-
-#replace plant species with species code? (easier to link between tables in the database w/o using regex)
-# @Sarah: Did you mean in the future we should advocate using species codes? Or use them now?
-# AS: Tried my hand at a strsplit anyway, made species codes!! Happy.
-# @nushiamme: I meant that we should change the data in the database to use species code (we should discuss why later). But kudos for getting this to work!
 SpeciesCode <- function(dat) {
   Gencode <- substr(dat$PlantSpecies, 1,2)
   Spcode <- 0
@@ -56,6 +43,26 @@ SpeciesCode <- function(dat) {
   return(dat$Species)
 }
 
+
+##-------------------- CLEAN THE DATA
+##### AS: NOTE to self- check metadata for how they calculated Totals ------##
+
+## subset only data from the two main landscapes
+pheno <- subset(pheno, Site == "HC" | Site == "PL/SC")
+nectar <- subset(nectar, Site == "HC" | Site == "PL/SC")
+# Removing rows with only Genus and no species name
+pheno <- pheno[-c(which(pheno$PlantSpecies=="Cersium")),]
+
+## Add a column for julian day, to help plot time series data
+
+pheno$julian <- JulianConversion(pheno)
+nectar$julian <- JulianConversion(nectar)
+
+#replace plant species with species code? (easier to link between tables in the database w/o using regex)
+# @Sarah: Did you mean in the future we should advocate using species codes? Or use them now?
+# AS: Tried my hand at a strsplit anyway, made species codes!! Happy.
+# @nushiamme: I meant that we should change the data in the database to use species code (we should discuss why later). But kudos for getting this to work!
+
 pheno$Species <- SpeciesCode(pheno)  #FIXME: Ideally we want this to work without throwing out Cersium (unless you have good reason for not including it)
 nectar$Species <- SpeciesCode(nectar)
 
@@ -65,7 +72,7 @@ m.pheno <- melt(pheno, id.vars=c("Site","Species","julian"),
 m.nectar <- melt(nectar, id.vars=c("Site", "Species", "julian"), 
                  measure.vars=c("Calories"))
 
-##### --- Plots ----######
+##-------------------- PLOT THE DATA
 #slice data may not be great (slice method was deemed not to work well)
 # AS: So should we subset that out? - FIXME
 # @nushiamme: This is a question for Susan. I don't think we can/should get rid of the data, but it means all results for this dataset are questionable.
