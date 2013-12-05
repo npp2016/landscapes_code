@@ -45,6 +45,7 @@ nectar$julian <- JulianConversion(nectar)
 #replace plant species with species code? (easier to link between tables in the database w/o using regex)
 # @Sarah: Did you mean in the future we should advocate using species codes? Or use them now?
 # AS: Tried my hand at a strsplit anyway, made species codes!! Happy.
+# @nushiamme: I meant that we should change the data in the database to use species code (we should discuss why later). But kudos for getting this to work!
 SpeciesCode <- function(dat) {
   Gencode <- substr(dat$PlantSpecies, 1,2)
   Spcode <- 0
@@ -55,7 +56,7 @@ SpeciesCode <- function(dat) {
   return(dat$Species)
 }
 
-pheno$Species <- SpeciesCode(pheno)
+pheno$Species <- SpeciesCode(pheno)  #FIXME: Ideally we want this to work without throwing out Cersium (unless you have good reason for not including it)
 nectar$Species <- SpeciesCode(nectar)
 
 #Melt dataframes by species, site and date
@@ -67,10 +68,12 @@ m.nectar <- melt(nectar, id.vars=c("Site", "Species", "julian"),
 ##### --- Plots ----######
 #slice data may not be great (slice method was deemed not to work well)
 # AS: So should we subset that out? - FIXME
+# @nushiamme: This is a question for Susan. I don't think we can/should get rid of the data, but it means all results for this dataset are questionable.
 
 # Phenology data
 # plot proportion of plant that is buds/flowers/fruits. 
 # TODO -------- Would this be more useful as proportions? I have plotted absolute numbers.
+# @nushiamme: I think total is good here - we want to know how many flowers are on the landscape. Proportion would be more interesting when comparing phenology or timing for species?
 #by species
 phenol.sp <- ggplot(m.pheno, aes(x=Species, y=value, fill=Species)) + geom_boxplot() + 
   ylab("Count") + facet_grid(~variable) + theme_bw() +
@@ -78,6 +81,7 @@ phenol.sp <- ggplot(m.pheno, aes(x=Species, y=value, fill=Species)) + geom_boxpl
 phenol.sp
 
 #by date
+# @nushiamme: I think this one could be interesting to also plot as proportion - can watch phenology change over time.
 phenol.date <- ggplot(m.pheno, aes(x=julian, y=value)) + stat_smooth(method='lm') +
   geom_point(size=2, col="dark green") + ylab("Count") + theme_bw() + facet_grid(~variable)
 phenol.date
@@ -92,8 +96,11 @@ phenol.site
 #volume (calculated from LengthNectar)
 vol.site <- ggplot(nectar, aes(Site, Volume)) + geom_boxplot()
 vol.site
-vol.date <- ggplot(nectar, aes(julian, Volume)) + geom_point()
+
+#TODO: This plot is cool. But add a second one that facets by site.
+vol.date <- ggplot(nectar, aes(julian, Volume)) + geom_point(aes(col=Species), alpha = 0.7)
 vol.date
+
 vol.species <- ggplot(nectar, aes(Species, Volume)) + geom_boxplot()
 vol.species
 
@@ -104,7 +111,13 @@ vol.species
 #plot Calories by plant species, site, and date, time of day
 cal.site <- ggplot(nectar, aes(Site, Calories)) + geom_boxplot()
 cal.site
-cal.date <- ggplot(nectar, aes(julian, Calories)) + geom_point()
+cal.date <- ggplot(nectar, aes(julian, Calories)) + geom_point(aes(col = Species), alpha = 0.75)
 cal.date
 cal.species <- ggplot(nectar, aes(Species, Calories)) + geom_boxplot()
 cal.species
+
+#relationship between volume and calorie content. 
+# Note that Chilopsis generally has a different slope than the other plants
+cal.volume <- ggplot(nectar, aes(Volume, Calories)) + geom_point(aes(col=Species), alpha = 0.5) + theme_bw()
+cal.volume
+
