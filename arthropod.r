@@ -16,9 +16,27 @@ setwd(wd)
 ## Read in csv files
 arthropods = read.csv("InsectCounts_Anusha.csv", header = T)
 
+##-------------------- FUNCTIONS
+
+JulianConversion <- function(dat) {
+  #converts date to julian day, so it can be easily plotted
+  for (row in 1:nrow(dat)){
+    line <- dat[row,]
+    dat$julian[row] <- julian(line$Month, line$Day, line$Year,
+                              origin. <- c(month=1, day=1, year=line$Year))
+  }
+  return(dat$julian)
+}
+
+
+##-------------------- CLEAN THE DATA
+
+arthropods$julian = JulianConversion(arthropods)
+
 ## Melt and aggregate data
 ##--- QUESTION: Should eggs and unknown remain in? #####
-m.arthro <- melt(arthropods, id.vars=c("Site", "VegetationType", "Month", "NumPlantsBeaten"), 
+# @nushiamme: Yes,but maybe eggs should be plotted separately since everything else is an adult (or larvae?)
+m.arthro <- melt(arthropods, id.vars=c("julian","Site", "VegetationType", "Month", "NumPlantsBeaten"), 
      measure.vars= c("Acari", "Aranea", "Coleoptera", "Crustacea", "Diptera", "Eggs",
                      "Grylloblattaria", "Hemiptera", "Hymenoptera", "Lepidoptera",
                      "Mantodea", "Neuroptera", "Orthoptera", "Phasmida", "Pscocoptera",
@@ -29,15 +47,20 @@ agg.arthro <- aggregate(x=m.arthro$value, by=list(m.arthro$Site), FUN=sum)
 names(agg.arthro) <- c("Site", "Count")
 agg.arthro
 
+agg.arthro_date <- aggregate(x=m.arthro$value, by=list(m.arthro$julian, m.arthro$Site), FUN=sum)
+names(agg.arthro_date) <- c("julian", "site", "count")
+
 ## Scale counts by number of samples collected (measure of sampling effort)
 ## I want to scale it by number of plants beaten (NumPlantsBeaten), but half of them are NAs.
-## FIXME: FIND OUT WHY
+## FIXME: FIND OUT WHY, email Omar?
 
-hc <- length(arthropods$Site[arthropods$Site=="HC"])
-pl <- length(arthropods$Site[arthropods$Site=="PL/SC"])
-samples <- c(hc, pl)
+hc_num_sites <- length(arthropods$Site[arthropods$Site=="HC"])
+pl_num_sites <- length(arthropods$Site[arthropods$Site=="PL/SC"])
+samples <- c(hc_num_sites, pl_num_sites)
 agg.arthro$scaled_count <- agg.arthro$Count/samples
 
+
+##-------------------- PLOT THE DATA
 # plot number of arthropods per site
 ggplot(agg.arthro, aes(x=Site, y=Count, fill=Site)) + geom_bar(stat="identity") + theme_bw()
 ggplot(agg.arthro, aes(x=Site, y=scaled_count, fill=Site)) + geom_bar(stat="identity") + theme_bw()
@@ -48,3 +71,8 @@ insect_order <- ggplot(m.arthro, aes(x=variable, y=value)) +
   theme_bw() +  xlab("Order") + ylab("Count") +
   theme(axis.text.x=element_text(angle=60, vjust=1, hjust=1)) 
 insect_order
+
+#plot arthropods across sampling date
+ggplot(agg.arthro_date, aes(julian, count)) + geom_point(aes(col=site))
+
+ggplot(m.arthro, aes(julian, value)) + geom_point(aes(col=variable)) + facet_wrap(~Site)
