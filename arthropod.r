@@ -14,7 +14,8 @@ wd = "C://Users/Anusha/Documents/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/F
 setwd(wd)
 
 ## Read in csv files
-arthropods = read.csv("InsectCounts_Anusha.csv", header = T)
+arthropods = read.csv("InsectData.csv", header = T)
+
 
 ##-------------------- FUNCTIONS
 
