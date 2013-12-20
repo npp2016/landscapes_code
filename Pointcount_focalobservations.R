@@ -14,7 +14,7 @@ wd = "C://Users//Anusha//Documents//Dropbox//Hummingbirds//Pasantias_Patagonia_2
 setwd(wd)
 
 ## Reading in point count and focal observation data
-pointdata <- read.csv("updated_FocalObservationPointCountData.csv", na.strings="NA", sep=",", header=T)
+pointdata <- read.csv("FocalObservationPointCountData.csv", na.strings="NA", sep=",", header=T)
 
 
 #----------CLEANING AND AGGREGATING THE DATA
@@ -29,35 +29,35 @@ for (row in 1:nrow(pointdata)){
 pointdata = subset(pointdata, Site == "HC" | Site == "PL/SC")
 
 ## subset data that excludes surveys where no birds were seen
-obs = subset(pointdata, Species.Code!="None")
+obs = subset(pointdata, SpeciesCode!="None")
   obs$Site <- factor(obs$Site, levels = c('HC', 'PL/SC'))
-  obs$Species.Code <- factor(obs$Species.Code, levels = c("ANHU", "BBLH", "BCHU", "COHU", "RUHU", "VCHU", "UNHU"))
+  obs$SpeciesCode <- factor(obs$SpeciesCode, levels = c("ANHU", "BBLH", "BCHU", "COHU", "RUHU", "VCHU", "UNHU"))
 
 #subset data that doesn't include species == NA or species == UNHU (for richness, don't care if we don't know identity)
-sppdata = subset(obs, Species.Code %in% c('ANHU', 'BBLH', 'BCHU', 'COHU', 'RUHU', 'VCHU'))
-  sppdata$Species.Code <- factor(sppdata$Species.Code, levels = c("ANHU", "BBLH", "BCHU", "COHU", "RUHU", "VCHU"))
+sppdata = subset(obs, SpeciesCode %in% c('ANHU', 'BBLH', 'BCHU', 'COHU', 'RUHU', 'VCHU'))
+  sppdata$SpeciesCode <- factor(sppdata$SpeciesCode, levels = c("ANHU", "BBLH", "BCHU", "COHU", "RUHU", "VCHU"))
 
 #subset data for each landscape
 hc = subset(obs, Site == "HC")
 pl = subset(obs, Site == "PL/SC")
 
 ## Aggregate data; count the number of species seen at each session on each day in each site, not counting UNHU and NA
-richnesstime <- aggregate(sppdata$Species.Code, by=list(sppdata$julian, sppdata$Session, sppdata$Site),
+richnesstime <- aggregate(sppdata$SpeciesCode, by=list(sppdata$julian, sppdata$Session, sppdata$Site),
                       FUN=function(u) length(unique(u)))
 names(richnesstime) <- c("julian", "session", "site", "S")
 richnesstime$session <- factor(richnesstime$session, levels = c('Morning', 'Midday','Afternoon'),ordered = TRUE)
 
 ## Aggregate data; count the number of species seen on each day in each site
-richnessday <- aggregate(sppdata$Species.Code, by=list(sppdata$julian, sppdata$Site),
+richnessday <- aggregate(sppdata$SpeciesCode, by=list(sppdata$julian, sppdata$Site),
                           FUN=function(u) length(unique(u)))
 names(richnessday) <- c("julian", "site", "S")
 
 ## Species richness at each site     
-richnesssite <- aggregate(sppdata$Species.Code, by=list(sppdata$Site), FUN=function(u) length(unique(u)))
+richnesssite <- aggregate(sppdata$SpeciesCode, by=list(sppdata$Site), FUN=function(u) length(unique(u)))
 names(richnesssite) <- c("site", "S")
 
 ## Total number of individuals of species at each site
-spcount = t(table(obs$Species.Code, obs$Site))
+spcount = t(table(obs$SpeciesCode, obs$Site))
 spcount = melt(spcount)
   names(spcount) = c("site", "spcode", "N")
 
@@ -77,7 +77,7 @@ ntime = subset(ntime, N!=0) #because we didn't sample on the same days
 #---------- PLOTTING THE DATA
 
 ## Plot species vs. site
-sitespecies <- ggplot(sppdata, aes(x=Site, y=Species.Code)) + ylab("Species") + 
+sitespecies <- ggplot(sppdata, aes(x=Site, y=SpeciesCode)) + ylab("Species") + 
   geom_point(col="indianred") + theme_bw()
 
 ## Compare the total number of species seen in each landscape
