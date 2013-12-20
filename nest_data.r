@@ -34,20 +34,20 @@ species_site <- aggregate(nest$Species, by=list(nest$Site, nest$Species),
 names(species_site) <- c("Site", "Species", "Richness")
 
 m.nestht <- melt(nest, id.vars=c("Site", "Species"), 
-                 measure.vars="Nest_Height", na.rm=T)
+                 measure.vars="NestHeight", na.rm=T)
 
 m.nestgenus <- melt(nest, id.vars=c("Site", "Species"), 
-                    measure.vars="Substrate_Genus", na.rm=T)
+                    measure.vars="SubstrateGenus", na.rm=T)
 
-m.treeht <- melt(nest, id.vars=c("Site", "Species"), measure.vars="Substrate_Height", na.rm=T)
+m.treeht <- melt(nest, id.vars=c("Site", "Species"), measure.vars="SubstrateHeight", na.rm=T)
 
-agg.stage <- aggregate(nest$Site, by=list(nest$Site, nest$Stage_Found), 
+agg.stage <- aggregate(nest$Site, by=list(nest$Site, nest$StageFound), 
                            FUN=function(x) x=length(x))
-names(agg.stage) <- c("Site","Stage_Found","Nests")
+names(agg.stage) <- c("Site","StageFound","Nests")
 
-agg.result <- aggregate(nest$Site, by=list(nest$Site, nest$Final_Result), 
+agg.result <- aggregate(nest$Site, by=list(nest$Site, nest$FinalResult), 
                           FUN=function(x) x=length(x))
-names(agg.result) <- c("Site", "Final_Status", "Nests")
+names(agg.result) <- c("Site", "FinalStatus", "Nests")
 
 ##--------- Plots
 
@@ -75,13 +75,13 @@ tree_ht <- ggplot(m.treeht, aes(x=Site, y=value)) +
 tree_ht
 
 # Stage the nests were found in
-stage_found <- ggplot(agg.stage, aes(Stage_Found, Nests, fill=factor(Stage_Found))) + 
+stage_found <- ggplot(agg.stage, aes(StageFound, Nests, fill=factor(StageFound))) + 
   geom_bar() + theme_bw() + facet_grid(~Site) + 
   theme(axis.text.x=element_text(angle=60, vjust=1, hjust=1))
 stage_found
 
 # Barplots for nest result at the two sites (num successful vs. depredated, etc.)
-nest_results <- ggplot(agg.result, aes(Final_Status, Nests, fill=factor(Final_Status))) + 
+nest_results <- ggplot(agg.result, aes(FinalStatus, Nests, fill=factor(FinalStatus))) + 
   geom_bar() + theme_bw() + facet_grid(~Site) + 
   theme(axis.text.x=element_text(angle=60, vjust=1, hjust=1))
 nest_results
