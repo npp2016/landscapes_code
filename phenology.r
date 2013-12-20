@@ -34,10 +34,10 @@ JulianConversion <- function(dat) {
 }
 
 SpeciesCode <- function(dat) {
-  Gencode <- substr(dat$PlantSpecies, 1,2)
+  Gencode <- toupper(substr(dat$PlantSpecies, 1,2))
   Spcode <- 0
   for (i in 1:length(dat$PlantSpecies)) {
-    Spcode[i] <- capitalize(substr(sapply(strsplit(as.character(dat$PlantSpecies[i]), " "), "[[", 2), 1,2))
+    Spcode[i] <- toupper(substr(sapply(strsplit(as.character(dat$PlantSpecies[i]), " "), "[[", 2), 1,2))
     dat$Species[i] <- paste(Gencode[i],Spcode[i], collapse="", sep="")
   }
   return(dat$Species)
@@ -127,4 +127,3 @@ cal.species
 # Note that Chilopsis generally has a different slope than the other plants
 cal.volume <- ggplot(nectar, aes(Volume, Calories)) + geom_point(aes(col=Species), alpha = 0.5) + theme_bw()
 cal.volume
-
