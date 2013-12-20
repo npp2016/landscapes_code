@@ -105,8 +105,9 @@ vol.site <- ggplot(nectar, aes(Site, Volume)) + geom_boxplot()
 vol.site
 
 #TODO: This plot is cool. But add a second one that facets by site.
-vol.date <- ggplot(nectar, aes(julian, Volume)) + geom_point(aes(col=Species), alpha = 0.7)
-vol.date
+vol.date.site <- ggplot(nectar, aes(julian, Volume)) + geom_point(aes(col=Species), alpha = 0.7) + 
+  facet_grid(~Site)
+vol.date.site
 
 vol.species <- ggplot(nectar, aes(Species, Volume)) + geom_boxplot()
 vol.species
@@ -125,5 +126,7 @@ cal.species
 
 #relationship between volume and calorie content. 
 # Note that Chilopsis generally has a different slope than the other plants
-cal.volume <- ggplot(nectar, aes(Volume, Calories)) + geom_point(aes(col=Species), alpha = 0.5) + theme_bw()
+cal.volume <- ggplot(nectar, aes(Volume, Calories)) + 
+  geom_point(aes(color=Species), alpha = 0.5, size=3) + theme_bw() +
+  scale_color_brewer(palette="Set1")
 cal.volume
