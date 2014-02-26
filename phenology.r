@@ -10,7 +10,6 @@ library(chron)
 library(R.utils)
 
 ##### CHOOSE WORKING DIRECTORY (uncomment the one you like)
-## Anusha doing a test commit. I will delete this
 ## There are multiple .csv files in this folder
 wd = "C://Users/Anusha/Documents/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Excel_CSV_versions/"
 #wd = "/Users/sarah/Desktop/Dropbox/Hummingbirds/Pasantias_Patagonia_2013/Final_Databases_2013/Excel_CSV_versions/"
