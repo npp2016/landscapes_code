@@ -1,8 +1,15 @@
-setwd("C://Users//Anusha/Documents/Dropbox/NASA_Anusha/")
+## Code to convert [degree °, minutes ', seconds "N or W] to decimal degrees
+## You don't need to convert the N and W to positive and negative.
+# I would suggest doing some quality checks with some website conversion after runnin the code
+
+## Anusha Shankar and Sarah Supp
+
+
+setwd("D:\\Dropbox\\NASA_Anusha\\hmn map data")
 
 ## Reading in csv file with locations
-hmndms <- read.csv("dms2dd.csv")
-head(hmndms)
+dms <- read.csv("dms2dd.csv")
+head(dms)
 
 ## Didn't use this. Save latitude and longitude as character vectors
 # latdms <- as.character(hmndms$Latitude_dont)
@@ -19,8 +26,17 @@ convert <-function(coord){
   return(c)
 }
 
+n <- length(dms)
+
 ## Run loop to use convert() function
 for(i in 1:n){
-  hmndms$latdd[i] <- convert(as.character(hmndms$Latitude_dont[i]))
-  hmndms$londd[i] <- convert(as.character(hmndms$Longitude_dont[i]))
+  dms$latdd[i] <- convert(as.character(dms$Latitude_dont[i]))
+  dms$londd[i] <- convert(as.character(dms$Longitude_dont[i]))
 }
+## You get errors 
+##"In convert(as.character(dms$Longitude_dont[i])) : NAs introduced by coercion"
+# I think these can be ignored.
+
+# Check if this worked
+head(dms$Latitude_dont)
+head(dms$latdd)
